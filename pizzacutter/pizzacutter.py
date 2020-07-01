@@ -148,9 +148,7 @@ class PizzaCutter(object):
         # a pathlib pattern is replaced with the str() of the pathlib replacement
         for pattern in self.conf.pizza_cutter_patterns.keys():
             replacement = self.conf.pizza_cutter_patterns[pattern]
-            # we need this, because pathlib3x.Path is NOT instance of pathlib.Path,
-            # but the User might use pathlib in his config File !
-            if str(type(replacement)) == str(type(pathlib.Path())):
+            if not isinstance(replacement, str):
                 replacement = str(replacement)
                 source_line = source_line.replace(pattern.encode('utf-8'), replacement.encode('utf-8'))
         return source_line
@@ -546,7 +544,7 @@ class PizzaCutter(object):
         >>> pizza_cutter = PizzaCutter(path_conf_file, path_template_folder, path_project_folder)
 
         >>> # test absolute replacement + relative replacement
-        >>> pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.absolute}}'] = pathlib.PosixPath('/test/doctest_absolute')
+        >>> pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.absolute}}'] = pathlib.PurePosixPath('/test/doctest_absolute')
         >>> pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.relative}}'] = pathlib.Path('./doctest')
         >>> test_file = path_template_folder/ '{{TestPizzaCutter.path.doctest.absolute}}/{{TestPizzaCutter.path.doctest.relative}}/test.txt'
         >>> pizza_cutter.path_replace_pathlib_patterns(test_file)
@@ -567,7 +565,7 @@ class PizzaCutter(object):
         ...Path('.../tests/pizzacutter_test_project_01/doctest/doctest/test.txt')
 
         >>> # test relative replacement + absolute replacement
-        >>> pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.absolute}}'] = pathlib.PosixPath('/test/doctest_absolute')
+        >>> pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.absolute}}'] = pathlib.PurePosixPath('/test/doctest_absolute')
         >>> pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.relative}}'] = pathlib.Path('./doctest')
         >>> test_file = path_template_folder/ '{{TestPizzaCutter.path.doctest.relative}}/{{TestPizzaCutter.path.doctest.absolute}}/test.txt'
         >>> pizza_cutter.path_replace_pathlib_patterns(test_file)
@@ -575,8 +573,8 @@ class PizzaCutter(object):
         ...Path('.../doctest_absolute/test.txt')
 
         >>> # test absolute replacement + absolute replacement (last "wins")
-        >>> pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.absolute1}}'] = pathlib.PosixPath('/test/doctest_absolute1')
-        >>> pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.absolute2}}'] = pathlib.PosixPath('/test/doctest_absolute2')
+        >>> pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.absolute1}}'] = pathlib.PurePosixPath('/test/doctest_absolute1')
+        >>> pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.absolute2}}'] = pathlib.PurePosixPath('/test/doctest_absolute2')
         >>> test_file = path_template_folder/ '{{TestPizzaCutter.path.doctest.absolute1}}/{{TestPizzaCutter.path.doctest.absolute2}}/test.txt'
         >>> pizza_cutter.path_replace_pathlib_patterns(test_file)
         <BLANKLINE>
@@ -601,7 +599,7 @@ class PizzaCutter(object):
                 replacement = self.conf.pizza_cutter_patterns[pattern]
                 # we need this, because pathlib3x.Path is NOT instance of pathlib.Path,
                 # but the User might use pathlib in his config File !
-                if not str(type(replacement)) == str(type(pathlib.Path())):
+                if isinstance(replacement, str):
                     continue
                 if pattern in source_object_part:
                     if source_object_part != pattern:
@@ -609,9 +607,6 @@ class PizzaCutter(object):
                             'pathlib.Path patterns can only be one complete part of a path : Path: "{path_source_file}", Pattern: {pattern}'.format(
                                 path_source_file=path_source_object, pattern=pattern))
                     else:
-                        # we need this, because pathlib3x.Path is NOT instance of pathlib.Path,
-                        # but the User might use pathlib in his config File !
-                        # therefore the little bit weired syntax just to pass mypy strict
                         target_object_part = pathlib.Path(replacement)
                         if target_object_part.is_absolute() and absolute_path_found:
                             logger.warning(
@@ -621,10 +616,7 @@ class PizzaCutter(object):
 
             if not absolute_path_found:
                 target_parts.append(target_object_part)
-                # we need this, because pathlib3x.Path is NOT instance of pathlib.Path,
-                # but the User might use pathlib in his config File !
-                # therefore the little bit weired syntax just to pass mypy strict
-                if str(type(target_object_part)) == str(type(pathlib.Path())) and pathlib.Path(target_object_part).is_absolute():
+                if not isinstance(target_object_part, str) and pathlib.Path(target_object_part).is_absolute():
                     absolute_path_found = True
 
         target_parts = list(reversed(target_parts))
