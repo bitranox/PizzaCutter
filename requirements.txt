@@ -1,0 +1,3 @@
+## Project Requirements
+click
+pathlib3x @ git+https://github.com/bitranox/pathlib3x.git

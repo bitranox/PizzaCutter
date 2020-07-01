@@ -1,0 +1,13 @@
+.. code-block:: bash
+
+   Usage: lib_travis_template.py [OPTIONS] COMMAND [ARGS]...
+
+     create or update Your python project
+
+   Options:
+     --version   Show the version and exit.
+     -h, --help  Show this message and exit.
+
+   Commands:
+     info     get program informations
+     rebuild  PROJECT_PATH - the full path to the project directory to rebuild
