@@ -273,15 +273,27 @@ class PizzaCutter(object):
                                        path_project_folder=path_project_folder, \
                                        dry_run= True)
 
+        >>> # test line not empty, without option 'delete_line_if_empty' set :
+        >>> pizza_cutter.conf.pizza_cutter_patterns['pizzacutter'] = 'doctest'
+        >>> source_line = pizza_cutter.replace_str_patterns_in_line(b'pizzacutter\\n')
+        >>> assert pizza_cutter.replace_option_patterns_in_line(source_line) == b'doctest\\n'
+
+        >>> # test line empty, without option 'delete_line_if_empty' set :
+        >>> pizza_cutter.conf.pizza_cutter_patterns['pizzacutter'] = ''
+        >>> source_line = pizza_cutter.replace_str_patterns_in_line(b'pizzacutter\\n')
+        >>> assert pizza_cutter.replace_option_patterns_in_line(source_line) == b'\\n'
+
         >>> # test line not empty, with option 'delete_line_if_empty' set :
         >>> pizza_cutter.conf.pizza_cutter_patterns['pizzacutter'] = 'doctest'
-        >>> source_line = pizza_cutter.replace_str_patterns_in_line(b'pizzacutter')
-        >>> assert pizza_cutter.replace_option_patterns_in_line(source_line) == b'doctest'
+        >>> source_line = pizza_cutter.replace_str_patterns_in_line(b'pizzacutter{{TestPizzaCutter.option.delete_line_if_empty}}\\n')
+        >>> assert pizza_cutter.replace_option_patterns_in_line(source_line) == b'doctest\\n'
 
         >>> # test line empty, with option 'delete_line_if_empty' set :
         >>> pizza_cutter.conf.pizza_cutter_patterns['pizzacutter'] = ''
-        >>> source_line = pizza_cutter.replace_str_patterns_in_line(b'pizzacutter')
+        >>> source_line = pizza_cutter.replace_str_patterns_in_line(b'pizzacutter{{TestPizzaCutter.option.delete_line_if_empty}}\\n')
         >>> assert pizza_cutter.replace_option_patterns_in_line(source_line) == b''
+
+
         """
         for option in self.conf.pizza_cutter_options.keys():
             pattern = self.conf.pizza_cutter_options[option]
@@ -544,8 +556,12 @@ class PizzaCutter(object):
         >>> pizza_cutter = PizzaCutter(path_conf_file, path_template_folder, path_project_folder)
 
         >>> # test absolute replacement + relative replacement
-        >>> pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.absolute}}'] = pathlib.PurePosixPath('/test/doctest_absolute')
-        >>> pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.relative}}'] = pathlib.PurePosixPath('./doctest')
+        >>> import platform
+        >>> if platform.system().lower() == 'windows':
+        ...     pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.absolute}}'] = pathlib.Path('c:/test/doctest_absolute')
+        ... else:
+        ...     pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.absolute}}'] = pathlib.Path('/test/doctest_absolute')
+        >>> pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.relative}}'] = pathlib.Path('./doctest')
         >>> test_file = path_template_folder/ '{{TestPizzaCutter.path.doctest.absolute}}/{{TestPizzaCutter.path.doctest.relative}}/test.txt'
         >>> pizza_cutter.path_replace_pathlib_patterns(test_file)
         <BLANKLINE>
