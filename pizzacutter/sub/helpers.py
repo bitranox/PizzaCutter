@@ -1,5 +1,5 @@
 # STDLIB
-import pathlib
+import pathlib3x as pathlib
 
 
 def path_startswith(path_object_to_test: pathlib.Path, path_object: pathlib.Path, resolve: bool = True) -> bool:

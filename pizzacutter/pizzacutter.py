@@ -294,26 +294,9 @@ class PizzaCutter(object):
                     source_line = b''
         return source_line
 
-        # OLD
-        pattern = self.conf.pizza_cutter_options['delete_line_if_empty']
-        pattern_bytes = pattern.encode('utf-8')
-        if pattern_bytes in source_line:
-            source_line = source_line.replace(pattern_bytes, b'')
-            if source_line.strip() == b'':
-                source_line = b''
-        return source_line
-
     def copy_files_from_template_to_project(self) -> None:
         """
         Builds or rebuilds a project
-
-        >>> # TEST1
-        >>> import pathlib3x
-        >>> pathlib3x.Path('__something__').unlink(missing_ok=True)
-
-        >>> # TEST2
-        >>> import pathlib3x as pathlib
-        >>> pathlib.Path('__something__').unlink(missing_ok=True)
 
         >>> # Setup
         >>> logger=logging.getLogger()
