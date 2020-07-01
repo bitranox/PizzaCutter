@@ -574,30 +574,41 @@ class PizzaCutter(object):
         ...Path('.../tests/pizzacutter_test_project_01/test.txt')
 
         >>> # test relative replacements
-        >>> pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.relative}}'] = pathlib.PurePosixPath('./doctest')
+        >>> pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.relative}}'] = pathlib.Path('./doctest')
         >>> test_file = path_template_folder/ '{{TestPizzaCutter.path.doctest.relative}}/{{TestPizzaCutter.path.doctest.relative}}/test.txt'
         >>> pizza_cutter.path_replace_pathlib_patterns(test_file)
         <BLANKLINE>
         ...Path('.../tests/pizzacutter_test_project_01/doctest/doctest/test.txt')
 
         >>> # test relative replacement + absolute replacement
-        >>> pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.absolute}}'] = pathlib.PurePosixPath('/test/doctest_absolute')
-        >>> pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.relative}}'] = pathlib.PurePosixPath('./doctest')
+        >>> if platform.system().lower() == 'windows':
+        ...     pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.absolute}}'] = pathlib.Path('c:/test/doctest_absolute')
+        ... else:
+        ...     pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.absolute}}'] = pathlib.Path('/test/doctest_absolute')
+        >>> pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.relative}}'] = pathlib.Path('./doctest')
         >>> test_file = path_template_folder/ '{{TestPizzaCutter.path.doctest.relative}}/{{TestPizzaCutter.path.doctest.absolute}}/test.txt'
         >>> pizza_cutter.path_replace_pathlib_patterns(test_file)
         <BLANKLINE>
         ...Path('.../doctest_absolute/test.txt')
 
         >>> # test absolute replacement + absolute replacement (last "wins")
-        >>> pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.absolute1}}'] = pathlib.PurePosixPath('/test/doctest_absolute1')
-        >>> pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.absolute2}}'] = pathlib.PurePosixPath('/test/doctest_absolute2')
+        >>> if platform.system().lower() == 'windows':
+        ...     pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.absolute1}}'] = pathlib.Path('c:/test/doctest_absolute1')
+        ... else:
+        ...     pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.absolute1}}'] = pathlib.Path('/test/doctest_absolute1')
+
+        >>> if platform.system().lower() == 'windows':
+        ...     pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.absolute2}}'] = pathlib.Path('c:/test/doctest_absolute2')
+        ... else:
+        ...     pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.absolute2}}'] = pathlib.Path('/test/doctest_absolute2')
+
         >>> test_file = path_template_folder/ '{{TestPizzaCutter.path.doctest.absolute1}}/{{TestPizzaCutter.path.doctest.absolute2}}/test.txt'
         >>> pizza_cutter.path_replace_pathlib_patterns(test_file)
         <BLANKLINE>
         ...Path('.../doctest_absolute2/test.txt')
 
         >>> # test path replacement not complete part of a path (name is also a complete part !!!)
-        >>> pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.relative}}'] = pathlib.PurePosixPath('./doctest')
+        >>> pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.relative}}'] = pathlib.Path('./doctest')
         >>> test_file = path_template_folder/ '{{TestPizzaCutter.path.doctest.relative}}/{{TestPizzaCutter.path.doctest.relative}}.txt'
         >>> pizza_cutter.path_replace_pathlib_patterns(test_file)
         Traceback (most recent call last):
