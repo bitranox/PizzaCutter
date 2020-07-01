@@ -307,6 +307,14 @@ class PizzaCutter(object):
         """
         Builds or rebuilds a project
 
+        >>> # TEST1
+        >>> import pathlib3x
+        >>> pathlib3x.Path('__something__').unlink(missing_ok=True)
+
+        >>> # TEST2
+        >>> import pathlib3x as pathlib
+        >>> pathlib.Path('__something__').unlink(missing_ok=True)
+
         >>> # Setup
         >>> logger=logging.getLogger()
         >>> logging.basicConfig()
