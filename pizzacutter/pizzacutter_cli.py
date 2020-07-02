@@ -1,5 +1,5 @@
 # STDLIB
-import pathlib
+import pathlib3x as pathlib
 
 # EXT
 import click
@@ -25,7 +25,22 @@ def info() -> None:
     __init__conf__.print_info()
 
 
-def rebuild(conf_file: str, template_dir: str = '', project_dir: str = '', dry_run: bool = False, overwrite: bool = False, write_outside: bool = False) -> None:
+def build(conf_file: str, template_dir: str = '', target_dir: str = '', dry_run: bool = False, overwrite: bool = False, write_outside: bool = False) -> None:
+    """ Builds the Project from the Template
+
+    >>> # Setup
+    >>> path_test_dir = pathlib.Path(__file__).parent.parent.resolve() / 'tests'
+    >>> path_template_dir = path_test_dir / 'pizzacutter_test_template_01'
+    >>> path_target_dir = path_test_dir / 'pizzacutter_test_project_01_result'
+    >>> path_conf_file = path_template_dir / 'PizzaCutterTestConfig_01.py'
+
+    >>> # Test only pass "conf_file", dry run
+    >>> build(conf_file=str(path_conf_file), template_dir='', target_dir='', dry_run=True)
+
+    >>> # Test pass "conf_file", "template_dir" and "target_dir" dry run
+    >>> build(conf_file=str(path_conf_file), template_dir=str(path_template_dir), target_dir=str(path_target_dir), dry_run=True)
+
+    """
 
     path_conf_file = pathlib.Path(conf_file).resolve()
 
@@ -34,12 +49,12 @@ def rebuild(conf_file: str, template_dir: str = '', project_dir: str = '', dry_r
     else:
         path_template_folder = path_conf_file.parent
 
-    if project_dir:
-        path_project_folder = pathlib.Path(project_dir).resolve()
+    if target_dir:
+        path_target_folder = pathlib.Path(target_dir).resolve()
     else:
-        path_project_folder = pathlib.Path.cwd().resolve()
+        path_target_folder = pathlib.Path.cwd().resolve()
 
-    pizzacutter.build(path_conf_file=path_conf_file, path_template_folder=path_template_folder, path_target_folder=path_project_folder,
+    pizzacutter.build(path_conf_file=path_conf_file, path_template_folder=path_template_folder, path_target_folder=path_target_folder,
                       dry_run=dry_run, allow_overwrite=overwrite, allow_outside_write=write_outside)
 
 
@@ -57,19 +72,24 @@ def cli_info() -> None:             # pragma: no cover
     info()                          # pragma: no cover
 
 
-@cli_main.command('rebuild', context_settings=CLICK_CONTEXT_SETTINGS)
+@cli_main.command('build', context_settings=CLICK_CONTEXT_SETTINGS)
 @click.argument('conf_file', type=click.Path(dir_okay=False, file_okay=True, exists=True, readable=True, resolve_path=True))
-@click.option('-t', '--template_dir', type=click.Path(dir_okay=True, file_okay=False, exists=False, resolve_path=False),
+@click.option('-p', '--template_dir', type=click.Path(dir_okay=True, file_okay=False, exists=False, resolve_path=False),
               help='use different template Folder with given CONF_FILE', default='')
-@click.option('-p', '--project_dir', type=click.Path(dir_okay=True, file_okay=False, exists=False, resolve_path=False),
+@click.option('-t', '--target_dir', type=click.Path(dir_okay=True, file_okay=False, exists=False, resolve_path=False),
               help='set target directory, default: current directory', default='')
 @click.option('-d', '--dry_run', is_flag=True, help='dry run', default=False)
-@click.option('-o', '--overwrite', is_flag=True, help='allow overwriting of files', default=False)
+@click.option('-o', '--overwrite', is_flag=True, help='allow overwriting of files', default=True)
 @click.option('-w', '--write_outside', is_flag=True, help='allow write outside the project dir', default=False)
-def cli_rebuild(conf_file: str, template_dir: str = '', project_dir: str = '',
-                dry_run: bool = False, overwrite: bool = False, write_outside: bool = False) -> None:
+def cli_build(conf_file: str, template_dir: str = '', target_dir: str = '',
+              dry_run: bool = False, overwrite: bool = False, write_outside: bool = False) -> None:
     """ build or rebuild from CONF_FILE"""
-    rebuild(conf_file=conf_file, template_dir=template_dir, project_dir=project_dir, dry_run=dry_run, overwrite=overwrite, write_outside=write_outside)
+    build(conf_file=conf_file,
+          template_dir=template_dir,
+          target_dir=target_dir,
+          dry_run=dry_run,
+          overwrite=overwrite,
+          write_outside=write_outside)  # pragma: no cover
 
 
 # entry point if main

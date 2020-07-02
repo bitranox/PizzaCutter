@@ -9,5 +9,5 @@
      -h, --help  Show this message and exit.
 
    Commands:
-     info     get program informations
-     rebuild  build or rebuild from CONF_FILE
+     build  build or rebuild from CONF_FILE
+     info   get program informations
