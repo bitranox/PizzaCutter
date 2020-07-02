@@ -13,7 +13,6 @@ try:
     from .sub import helpers
     from .sub import import_module
     from .sub.pizzacutter_config import PizzaCutterConfigBase
-    # import of project_conf is only to get type hints in the ide, it will be re-imported
 except (ImportError, ModuleNotFoundError):  # pragma: no cover
     # imports for doctest
     from sub import get_config  # type: ignore  # pragma: no cover
@@ -33,7 +32,7 @@ class PizzaCutter(object):
                  # the path to the Template Folder - can be set by the conf File to the Directory the conf file sits - can be overridden by untrusted conf_file
                  path_template_folder: Optional[pathlib.Path] = None,
                  # the target path of the Project Folder - this should be the current Directory - can be overridden by conf_file
-                 path_project_folder: Optional[pathlib.Path] = None,
+                 path_target_folder: Optional[pathlib.Path] = None,
                  # dry run - test only, report overwrites, files outside project directory, unset patterns, unused patterns from conf file
                  # only made the easy tests now - for full test of replacements we would need to install into a temp directory
                  dry_run: Optional[bool] = None,
@@ -43,20 +42,31 @@ class PizzaCutter(object):
                  allow_outside_write: Optional[bool] = None,
                  quiet: Optional[bool] = None
                  ):
+        """ Init reads the config file and sets up the neccessary class properties
+
+        >>> # Setup
+        >>> path_test_dir = pathlib.Path(__file__).parent.parent.resolve() / 'tests'
+        >>> path_template_dir = path_test_dir / 'pizzacutter_test_template_01'
+        >>> path_conf_file = path_template_dir / 'PizzaCutterTestConfig_01.py'
+
+        >>> # Test init, only conf file passed, quiet
+        >>> pizza_cutter = PizzaCutter(path_conf_file=path_conf_file, quiet=True)
+
+        """
 
         self.conf = get_config.PizzaCutterGetConfig(pizza_cutter_path_conf_file=path_conf_file,
                                                     pizza_cutter_path_template_folder=path_template_folder,
-                                                    pizza_cutter_path_target_folder=path_project_folder).conf
+                                                    pizza_cutter_path_target_folder=path_target_folder).conf
 
         if path_template_folder is None:
             self.path_template_folder = self.conf.pizza_cutter_path_template_folder
         else:
             self.path_template_folder = path_template_folder
 
-        if path_project_folder is None:
+        if path_target_folder is None:
             self.path_project_folder = self.conf.pizza_cutter_path_project_folder
         else:
-            self.path_project_folder = path_project_folder
+            self.path_project_folder = path_target_folder
 
         if allow_overwrite is None:
             self.allow_overwrite = self.conf.pizza_cutter_allow_overwrite
@@ -82,6 +92,7 @@ class PizzaCutter(object):
         self.pattern_stack: List[str] = list()
 
     def build(self) -> None:
+        """ builds or rebuilds the target based on the conf file and template given"""
         self.conf.pizza_cutter_hook_before_build()
         self.resolve_str_patterns()
         self.copy_files_from_template_to_project()
@@ -90,15 +101,18 @@ class PizzaCutter(object):
         self.conf.pizza_cutter_hook_after_build()
 
     def replace_patterns_in_files(self) -> None:
+        """
+        replaces the patterns in each file
+
+        """
 
         path_source_objects = self.get_path_template_objects()
 
         for path_source_object in path_source_objects:
-            s_path_source_object_resolved = str(path_source_object)
 
             path_target_object = self.get_path_target_object(path_source_object=path_source_object)
 
-            if self.do_not_copy(s_path_source_object_resolved):
+            if self.do_not_copy(path_source_object):
                 continue
 
             if self.skip_write_outside_project_folder(path_target_object, quiet=True):
@@ -164,10 +178,10 @@ class PizzaCutter(object):
         >>> path_test_dir = pathlib.Path(__file__).parent.parent / 'tests'
         >>> path_template_folder = path_test_dir / 'pizzacutter_test_template_01'
         >>> path_conf_file = path_template_folder / 'PizzaCutterTestConfig_01.py'
-        >>> path_project_folder = path_test_dir / 'pizzacutter_test_project_01'
+        >>> path_target_folder = path_test_dir / 'pizzacutter_test_project_01'
         >>> pizza_cutter = PizzaCutter(path_conf_file=path_conf_file, \
                                        path_template_folder=path_template_folder, \
-                                       path_project_folder=path_project_folder, \
+                                       path_target_folder=path_target_folder, \
                                        dry_run= True)
 
         >>> pizza_cutter.conf.pizza_cutter_patterns['pizzacutter'] = 'doctest'
@@ -197,10 +211,10 @@ class PizzaCutter(object):
         >>> path_test_dir = pathlib.Path(__file__).parent.parent / 'tests'
         >>> path_template_folder = path_test_dir / 'pizzacutter_test_template_01'
         >>> path_conf_file = path_template_folder / 'PizzaCutterTestConfig_01.py'
-        >>> path_project_folder = path_test_dir / 'pizzacutter_test_project_01'
+        >>> path_target_folder = path_test_dir / 'pizzacutter_test_project_01'
         >>> pizza_cutter = PizzaCutter(path_conf_file=path_conf_file, \
                                        path_template_folder=path_template_folder, \
-                                       path_project_folder=path_project_folder, \
+                                       path_target_folder=path_target_folder, \
                                        dry_run= True)
 
         >>> # Test
@@ -265,12 +279,12 @@ class PizzaCutter(object):
         >>> path_test_dir = pathlib.Path(__file__).parent.parent / 'tests'
         >>> path_template_folder = path_test_dir / 'pizzacutter_test_template_01'
         >>> path_conf_file = path_template_folder / 'PizzaCutterTestConfig_01.py'
-        >>> path_project_folder = path_test_dir / 'pizzacutter_test_project_01'
-        >>> pizza_cutter = PizzaCutter(path_conf_file, path_template_folder, path_project_folder)
+        >>> path_target_folder = path_test_dir / 'pizzacutter_test_project_01'
+        >>> pizza_cutter = PizzaCutter(path_conf_file, path_template_folder, path_target_folder)
 
         >>> pizza_cutter = PizzaCutter(path_conf_file=path_conf_file, \
                                        path_template_folder=path_template_folder, \
-                                       path_project_folder=path_project_folder, \
+                                       path_target_folder=path_target_folder, \
                                        dry_run= True)
 
         >>> # test line not empty, without option 'delete_line_if_empty' set :
@@ -317,43 +331,42 @@ class PizzaCutter(object):
         >>> path_template_folder = path_test_dir / 'pizzacutter_test_template_01'
         >>> path_conf_file = path_template_folder / 'PizzaCutterTestConfig_01.py'
         >>> path_expected_folder = path_test_dir / 'pizzacutter_test_project_01_expected'
-        >>> path_project_folder = path_test_dir / 'pizzacutter_test_project_01'
-        >>> pizza_cutter = PizzaCutter(path_conf_file, path_template_folder, path_project_folder)
+        >>> path_target_folder = path_test_dir / 'pizzacutter_test_project_01'
+        >>> pizza_cutter = PizzaCutter(path_conf_file, path_template_folder, path_target_folder)
 
-        >>> pizza_cutter = PizzaCutter(path_conf_file, path_template_folder, path_project_folder)
-        >>> shutil.rmtree(path_project_folder, ignore_errors=True)
+        >>> pizza_cutter = PizzaCutter(path_conf_file, path_template_folder, path_target_folder)
+        >>> shutil.rmtree(path_target_folder, ignore_errors=True)
 
         >>> # Test Create Files
         >>> pizza_cutter = PizzaCutter(path_conf_file=path_conf_file, \
                                        path_template_folder=path_template_folder, \
-                                       path_project_folder=path_project_folder, \
+                                       path_target_folder=path_target_folder, \
                                        dry_run= False)
         >>> pizza_cutter.copy_files_from_template_to_project()
-        >>> assert len(list(path_expected_folder.glob('./**/*'))) == len(list(path_project_folder.glob('./**/*')))
+        >>> assert len(list(path_expected_folder.glob('./**/*'))) == len(list(path_target_folder.glob('./**/*')))
 
         >>> # Test Update Files
         >>> pizza_cutter.copy_files_from_template_to_project()
-        >>> assert len(list(path_expected_folder.glob('./**/*'))) == len(list(path_project_folder.glob('./**/*')))
+        >>> assert len(list(path_expected_folder.glob('./**/*'))) == len(list(path_target_folder.glob('./**/*')))
 
         >>> # Teardown
-        >>> shutil.rmtree(path_project_folder)
+        >>> shutil.rmtree(path_target_folder)
 
 
         """
         path_source_objects = self.get_path_template_objects()
 
         for path_source_object in path_source_objects:
-            s_path_source_object = str(path_source_object)
 
             path_target_object_resolved = self.get_path_target_object(path_source_object=path_source_object)
 
-            if self.do_not_copy(s_path_source_object):
+            if self.do_not_copy(path_source_object):
                 continue
 
             if self.skip_write_outside_project_folder(path_target_object_resolved):
                 continue
 
-            if self.skip_overwrite(s_path_source_object, path_target_object_resolved):
+            if self.skip_overwrite(path_source_object, path_target_object_resolved):
                 continue
 
             if self.dry_run:
@@ -367,8 +380,9 @@ class PizzaCutter(object):
                 path_target_object_resolved.unlink(missing_ok=True)
                 shutil.copy2(str(path_source_object), str(path_target_object_resolved))
 
-    def do_not_copy(self, file_object_name: str) -> bool:
+    def do_not_copy(self, file_object: pathlib.Path) -> bool:
         """ Check if the pattern for option 'object_no_copy' in file_object_name """
+        file_object_name = str(file_object)
         if self.conf.pizza_cutter_options['object_no_copy'] in file_object_name:
             return True
         else:
@@ -400,20 +414,20 @@ class PizzaCutter(object):
 
         return skip_outside_write
 
-    def skip_overwrite(self, s_path_source_object: str, path_target_object_resolved: pathlib.Path) -> bool:
+    def skip_overwrite(self, path_source_object: pathlib.Path, path_target_object: pathlib.Path) -> bool:
         """ check if overwrite is allowed """
 
-        if self.conf.pizza_cutter_options['object_no_overwrite'] in s_path_source_object and path_target_object_resolved.exists():
+        if self.conf.pizza_cutter_options['object_no_overwrite'] in str(path_source_object) and path_target_object.exists():
             return True
 
-        if path_target_object_resolved.exists():
+        if path_target_object.exists():
             if self.allow_overwrite:
                 if self.dry_run:
-                    logger.debug('object will be overwritten: "{}"'.format(path_target_object_resolved))
+                    logger.debug('object will be overwritten: "{}"'.format(path_target_object))
                 return False
             else:
                 if self.dry_run:
-                    logger.debug('object overwrite skipped, because allow_overwrite = False: "{}"'.format(path_target_object_resolved))
+                    logger.debug('object overwrite skipped, because allow_overwrite = False: "{}"'.format(path_target_object))
                 return True
         else:
             return False
@@ -423,11 +437,10 @@ class PizzaCutter(object):
         path_source_objects = self.get_path_template_objects()
 
         for path_source_object in path_source_objects:
-            s_path_source_object_resolved = str(path_source_object)
 
             path_target_object = self.get_path_target_object(path_source_object=path_source_object)
 
-            if self.do_not_copy(s_path_source_object_resolved):
+            if self.do_not_copy(path_source_object):
                 continue
 
             if self.skip_write_outside_project_folder(path_target_object, quiet=True):
@@ -724,7 +737,7 @@ def build(path_conf_file: pathlib.Path,
 
     pizza_cutter = PizzaCutter(path_conf_file=path_conf_file,
                                path_template_folder=path_template_folder,
-                               path_project_folder=path_target_folder,
+                               path_target_folder=path_target_folder,
                                dry_run=dry_run,
                                allow_overwrite=allow_overwrite,
                                allow_outside_write=allow_outside_write,
