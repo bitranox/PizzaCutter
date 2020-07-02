@@ -420,15 +420,7 @@ class PizzaCutter(object):
                 helpers.create_target_directory(path_target_object_resolved.parent)
                 # because sometime we receive "permission denied" when overwriting the file (weired)
                 path_target_object_resolved.unlink(missing_ok=True)
-                try:
-                    shutil.copy2(str(path_source_object), str(path_target_object_resolved))
-                except Exception:
-                    msg = 'source: {} Exists: {}, isFile: {}, target: {}, files: {}'.format(path_source_object,
-                                                                                            path_source_object.exists(),
-                                                                                            path_source_object.is_file(),
-                                                                                            path_target_object_resolved,
-                                                                                            pprint.pformat(path_source_object.parent.glob('*')))
-                    raise FileNotFoundError(msg)
+                shutil.copy2(str(path_source_object), str(path_target_object_resolved))
 
     def do_not_copy(self, file_object: pathlib.Path) -> bool:
         """ Check if the pattern for option 'object_no_copy' in file_object_name """
