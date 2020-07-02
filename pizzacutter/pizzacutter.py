@@ -125,47 +125,30 @@ class PizzaCutter(object):
 
         >>> # Test create project, outside write not allowed, overwrite allowed
         >>> pizza_cutter = PizzaCutter(path_conf_file=path_conf_file, path_template_dir=path_template_dir, path_target_dir=path_target_dir)
+        >>> pizza_cutter.build()
+        >>> assert not path_outside_target_dir.exists()
+
+        >>> pizza_cutter.quite = False
+        >>> pizza_cutter.dry_run = False
         >>> pizza_cutter.allow_overwrite = True
+        >>> pizza_cutter.allow_outside_write = False
         >>> pizza_cutter.build()
         >>> assert not path_outside_target_dir.exists()
 
-        >>> # test update project, outside write not allowed, quiet = False
-        >>> pizza_cutter.quite = False
-        >>> pizza_cutter.build()
-        >>> assert not path_outside_target_dir.exists()
-
-        >>> # test update project, outside write not allowed, quiet = True, dry_run = True
         >>> pizza_cutter.quite = False
         >>> pizza_cutter.dry_run = True
+        >>> pizza_cutter.allow_overwrite = True
+        >>> pizza_cutter.allow_outside_write = False
         >>> pizza_cutter.build()
         >>> assert not path_outside_target_dir.exists()
 
-        >>> # test update project, outside write not allowed, dry run to see overwrite warnings
-        >>> pizza_cutter.dry_run = True
-        >>> pizza_cutter.build()
-        >>> assert not path_outside_target_dir.exists()
-        >>> pizza_cutter.dry_run = False
-
-        >>> # test update project, outside write allowed, dry run, not quiet
-        >>> pizza_cutter.allow_outside_write = True
-        >>> pizza_cutter.dry_run = True
-        >>> pizza_cutter.quite = False
-        >>> pizza_cutter.build()
-        >>> assert not path_outside_target_dir.exists()
-
-        >>> # test update project, outside write allowed, no dry run, quiet
-        >>> pizza_cutter.allow_outside_write = True
-        >>> pizza_cutter.dry_run = False
         >>> pizza_cutter.quite = True
-        >>> pizza_cutter.build()
-        >>> assert path_outside_target_dir.exists()
-
-        >>> # test update project, outside write allowed, no dry run, not quiet
+        >>> pizza_cutter.dry_run = True
+        >>> pizza_cutter.allow_overwrite = False
         >>> pizza_cutter.allow_outside_write = True
-        >>> pizza_cutter.dry_run = False
-        >>> pizza_cutter.quite = False
         >>> pizza_cutter.build()
-        >>> assert path_outside_target_dir.exists()
+        >>> assert not path_outside_target_dir.exists()
+
 
         >>> # Teardown
         >>> shutil.rmtree(path_target_dir, ignore_errors=True)
