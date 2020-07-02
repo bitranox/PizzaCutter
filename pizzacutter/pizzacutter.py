@@ -149,6 +149,13 @@ class PizzaCutter(object):
         >>> pizza_cutter.build()
         >>> assert not path_outside_target_dir.exists()
 
+        >>> pizza_cutter.quite = False
+        >>> pizza_cutter.dry_run = False
+        >>> pizza_cutter.allow_overwrite = True
+        >>> pizza_cutter.allow_outside_write = True
+        >>> pizza_cutter.build()
+        >>> assert path_outside_target_dir.exists()
+
 
         >>> # Teardown
         >>> shutil.rmtree(path_target_dir, ignore_errors=True)
