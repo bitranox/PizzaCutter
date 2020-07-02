@@ -30,9 +30,9 @@ class PizzaCutter(object):
                  # the path to the PizzaCutter conf File
                  path_conf_file: pathlib.Path,
                  # the path to the Template Folder - can be set by the conf File to the Directory the conf file sits - can be overridden by untrusted conf_file
-                 path_template_folder: Optional[pathlib.Path] = None,
+                 path_template_dir: Optional[pathlib.Path] = None,
                  # the target path of the Project Folder - this should be the current Directory - can be overridden by conf_file
-                 path_target_folder: Optional[pathlib.Path] = None,
+                 path_target_dir: Optional[pathlib.Path] = None,
                  # dry run - test only, report overwrites, files outside project directory, unset patterns, unused patterns from conf file
                  # only made the easy tests now - for full test of replacements we would need to install into a temp directory
                  dry_run: Optional[bool] = None,
@@ -54,19 +54,22 @@ class PizzaCutter(object):
 
         """
 
+        if not path_conf_file.is_file():
+            raise FileNotFoundError('the config file "{}" can not be found'.format(path_conf_file))
+
         self.conf = get_config.PizzaCutterGetConfig(pizza_cutter_path_conf_file=path_conf_file,
-                                                    pizza_cutter_path_template_folder=path_template_folder,
-                                                    pizza_cutter_path_target_folder=path_target_folder).conf
+                                                    pizza_cutter_path_template_dir=path_template_dir,
+                                                    pizza_cutter_path_target_dir=path_target_dir).conf
 
-        if path_template_folder is None:
-            self.path_template_folder = self.conf.pizza_cutter_path_template_folder
+        if path_template_dir is None:
+            self.path_template_dir = self.conf.pizza_cutter_path_template_dir
         else:
-            self.path_template_folder = path_template_folder
+            self.path_template_dir = path_template_dir
 
-        if path_target_folder is None:
-            self.path_project_folder = self.conf.pizza_cutter_path_project_folder
+        if path_target_dir is None:
+            self.path_target_dir = self.conf.pizza_cutter_path_target_dir
         else:
-            self.path_project_folder = path_target_folder
+            self.path_target_dir = path_target_dir
 
         if allow_overwrite is None:
             self.allow_overwrite = self.conf.pizza_cutter_allow_overwrite
@@ -104,6 +107,35 @@ class PizzaCutter(object):
         """
         replaces the patterns in each file
 
+        >>> # Setup
+        >>> path_test_dir = pathlib.Path(__file__).parent.parent.resolve() / 'tests'
+        >>> path_template_dir = path_test_dir / 'pizzacutter_test_template_02'
+        >>> path_target_dir = path_test_dir / 'pizzacutter_test_target_02'
+        >>> path_outside_target_dir = path_test_dir / 'outside_target_dir'
+        >>> path_conf_file = path_template_dir / 'PizzaCutterTestConfig_02.py'
+        >>> shutil.rmtree(path_target_dir, ignore_errors=True)
+        >>> shutil.rmtree(path_outside_target_dir, ignore_errors=True)
+
+
+        >>> # Test create project, outside write not allowed
+        >>> pizza_cutter = PizzaCutter(path_conf_file=path_conf_file, path_template_dir=path_template_dir, path_target_dir=path_target_dir, quiet=True)
+        >>> pizza_cutter.build()
+        >>> assert not path_outside_target_dir.exists()
+
+        >>> # test update project, outside write not allowed
+        >>> pizza_cutter.build()
+        >>> assert not path_outside_target_dir.exists()
+
+        >>> # test update project, outside write allowed
+        >>> pizza_cutter = PizzaCutter(path_conf_file=path_conf_file, path_template_dir=path_template_dir, path_target_dir=path_target_dir,
+        ...                            allow_outside_write=True, quiet=True)
+        >>> pizza_cutter.build()
+        >>> assert path_outside_target_dir.exists()
+
+        >>> # Teardown
+        >>> shutil.rmtree(path_target_dir, ignore_errors=True)
+        >>> shutil.rmtree(path_outside_target_dir, ignore_errors=True)
+
         """
 
         path_source_objects = self.get_path_template_objects()
@@ -119,8 +151,7 @@ class PizzaCutter(object):
                 continue
 
             if path_target_object.is_file():
-                # TODO: add to PathlibX append_suffix new_path = path.parent / (path.name + '.suffix')
-                path_target_patterns_replaced = path_target_object.parent / (path_target_object.name + '.PizzaCutter_Temp')
+                path_target_patterns_replaced = path_target_object.append_suffix('.PizzaCutter_Temp')
                 with open(str(path_target_patterns_replaced), 'wb') as f_target:
                     self.replace_patterns_in_file(path_target_object, f_target)
                 path_target_object.unlink()
@@ -176,12 +207,12 @@ class PizzaCutter(object):
         >>> logger.level=logging.DEBUG
 
         >>> path_test_dir = pathlib.Path(__file__).parent.parent / 'tests'
-        >>> path_template_folder = path_test_dir / 'pizzacutter_test_template_01'
-        >>> path_conf_file = path_template_folder / 'PizzaCutterTestConfig_01.py'
-        >>> path_target_folder = path_test_dir / 'pizzacutter_test_project_01'
+        >>> path_template_dir = path_test_dir / 'pizzacutter_test_template_01'
+        >>> path_conf_file = path_template_dir / 'PizzaCutterTestConfig_01.py'
+        >>> path_target_dir = path_test_dir / 'pizzacutter_test_project_01'
         >>> pizza_cutter = PizzaCutter(path_conf_file=path_conf_file, \
-                                       path_template_folder=path_template_folder, \
-                                       path_target_folder=path_target_folder, \
+                                       path_template_dir=path_template_dir, \
+                                       path_target_dir=path_target_dir, \
                                        dry_run= True)
 
         >>> pizza_cutter.conf.pizza_cutter_patterns['pizzacutter'] = 'doctest'
@@ -209,12 +240,12 @@ class PizzaCutter(object):
         >>> logger.level=logging.DEBUG
 
         >>> path_test_dir = pathlib.Path(__file__).parent.parent / 'tests'
-        >>> path_template_folder = path_test_dir / 'pizzacutter_test_template_01'
-        >>> path_conf_file = path_template_folder / 'PizzaCutterTestConfig_01.py'
-        >>> path_target_folder = path_test_dir / 'pizzacutter_test_project_01'
+        >>> path_template_dir = path_test_dir / 'pizzacutter_test_template_01'
+        >>> path_conf_file = path_template_dir / 'PizzaCutterTestConfig_01.py'
+        >>> path_target_dir = path_test_dir / 'pizzacutter_test_project_01'
         >>> pizza_cutter = PizzaCutter(path_conf_file=path_conf_file, \
-                                       path_template_folder=path_template_folder, \
-                                       path_target_folder=path_target_folder, \
+                                       path_template_dir=path_template_dir, \
+                                       path_target_dir=path_target_dir, \
                                        dry_run= True)
 
         >>> # Test
@@ -277,14 +308,14 @@ class PizzaCutter(object):
         >>> logger.level=logging.DEBUG
 
         >>> path_test_dir = pathlib.Path(__file__).parent.parent / 'tests'
-        >>> path_template_folder = path_test_dir / 'pizzacutter_test_template_01'
-        >>> path_conf_file = path_template_folder / 'PizzaCutterTestConfig_01.py'
-        >>> path_target_folder = path_test_dir / 'pizzacutter_test_project_01'
-        >>> pizza_cutter = PizzaCutter(path_conf_file, path_template_folder, path_target_folder)
+        >>> path_template_dir = path_test_dir / 'pizzacutter_test_template_01'
+        >>> path_conf_file = path_template_dir / 'PizzaCutterTestConfig_01.py'
+        >>> path_target_dir = path_test_dir / 'pizzacutter_test_project_01'
+        >>> pizza_cutter = PizzaCutter(path_conf_file, path_template_dir, path_target_dir)
 
         >>> pizza_cutter = PizzaCutter(path_conf_file=path_conf_file, \
-                                       path_template_folder=path_template_folder, \
-                                       path_target_folder=path_target_folder, \
+                                       path_template_dir=path_template_dir, \
+                                       path_target_dir=path_target_dir, \
                                        dry_run= True)
 
         >>> # test line not empty, without option 'delete_line_if_empty' set :
@@ -328,29 +359,29 @@ class PizzaCutter(object):
         >>> logger.level=logging.DEBUG
 
         >>> path_test_dir = pathlib.Path(__file__).parent.parent / 'tests'
-        >>> path_template_folder = path_test_dir / 'pizzacutter_test_template_01'
-        >>> path_conf_file = path_template_folder / 'PizzaCutterTestConfig_01.py'
+        >>> path_template_dir = path_test_dir / 'pizzacutter_test_template_01'
+        >>> path_conf_file = path_template_dir / 'PizzaCutterTestConfig_01.py'
         >>> path_expected_folder = path_test_dir / 'pizzacutter_test_project_01_expected'
-        >>> path_target_folder = path_test_dir / 'pizzacutter_test_project_01'
-        >>> pizza_cutter = PizzaCutter(path_conf_file, path_template_folder, path_target_folder)
+        >>> path_target_dir = path_test_dir / 'pizzacutter_test_project_01'
+        >>> pizza_cutter = PizzaCutter(path_conf_file, path_template_dir, path_target_dir)
 
-        >>> pizza_cutter = PizzaCutter(path_conf_file, path_template_folder, path_target_folder)
-        >>> shutil.rmtree(path_target_folder, ignore_errors=True)
+        >>> pizza_cutter = PizzaCutter(path_conf_file, path_template_dir, path_target_dir)
+        >>> shutil.rmtree(path_target_dir, ignore_errors=True)
 
         >>> # Test Create Files
         >>> pizza_cutter = PizzaCutter(path_conf_file=path_conf_file, \
-                                       path_template_folder=path_template_folder, \
-                                       path_target_folder=path_target_folder, \
+                                       path_template_dir=path_template_dir, \
+                                       path_target_dir=path_target_dir, \
                                        dry_run= False)
         >>> pizza_cutter.copy_files_from_template_to_project()
-        >>> assert len(list(path_expected_folder.glob('./**/*'))) == len(list(path_target_folder.glob('./**/*')))
+        >>> assert len(list(path_expected_folder.glob('./**/*'))) == len(list(path_target_dir.glob('./**/*')))
 
         >>> # Test Update Files
         >>> pizza_cutter.copy_files_from_template_to_project()
-        >>> assert len(list(path_expected_folder.glob('./**/*'))) == len(list(path_target_folder.glob('./**/*')))
+        >>> assert len(list(path_expected_folder.glob('./**/*'))) == len(list(path_target_dir.glob('./**/*')))
 
         >>> # Teardown
-        >>> shutil.rmtree(path_target_folder)
+        >>> shutil.rmtree(path_target_dir)
 
 
         """
@@ -396,7 +427,7 @@ class PizzaCutter(object):
         if quiet is None:
             quiet = self.quiet
 
-        if helpers.path_startswith(path_target_object, self.path_project_folder):
+        if helpers.path_startswith(path_target_object, self.path_target_dir):
             return skip_outside_write
 
         if self.allow_outside_write:
@@ -452,7 +483,7 @@ class PizzaCutter(object):
     def log_unfilled_pattern_in_object_name(self, path_object: pathlib.Path) -> None:
         object_path_name = str(path_object)
         for prefix in self.conf.pizzacutter_pattern_prefixes:
-            if prefix in object_path_name:
+            if not self.quiet and prefix in object_path_name:
                 full_prefix = prefix + object_path_name.split(prefix, 1)[1].split('}}', 1)[0] + '}}'
                 logger.warning('unfilled Pattern "{full_prefix}" in Filename "{object_path_name}"'.format(full_prefix=full_prefix,
                                                                                                           object_path_name=object_path_name))
@@ -477,26 +508,26 @@ class PizzaCutter(object):
 
         >>> # Setup
         >>> path_test_dir = pathlib.Path(__file__).parent.parent / 'tests'
-        >>> path_template_folder = path_test_dir / 'pizzacutter_test_template_01'
-        >>> path_conf_file = path_template_folder / 'PizzaCutterTestConfig_01.py'
-        >>> path_project_folder = path_test_dir / 'pizzacutter_test_project_01'
-        >>> pizza_cutter = PizzaCutter(path_conf_file, path_template_folder, path_project_folder)
+        >>> path_template_dir = path_test_dir / 'pizzacutter_test_template_01'
+        >>> path_conf_file = path_template_dir / 'PizzaCutterTestConfig_01.py'
+        >>> path_target_dir = path_test_dir / 'pizzacutter_test_project_01'
+        >>> pizza_cutter = PizzaCutter(path_conf_file, path_template_dir, path_target_dir)
 
         >>> # test ok
-        >>> test_file = path_template_folder/ 'test.txt{{TestPizzaCutter.option.no_copy}}'
+        >>> test_file = path_template_dir/ 'test.txt{{TestPizzaCutter.option.no_copy}}'
         >>> pizza_cutter.path_remove_cutter_option_patterns(test_file)
         <BLANKLINE>
         ...Path('.../tests/pizzacutter_test_template_01/test.txt')
 
         >>> # directory only option patterns Fails
-        >>> test_file = path_template_folder/ '{{TestPizzaCutter.option.no_copy}}/test.txt{{TestPizzaCutter.option.no_copy}}'
+        >>> test_file = path_template_dir/ '{{TestPizzaCutter.option.no_copy}}/test.txt{{TestPizzaCutter.option.no_copy}}'
         >>> pizza_cutter.path_remove_cutter_option_patterns(test_file)
         Traceback (most recent call last):
             ...
         RuntimeError: No part of the path ...
 
         >>> # File only option patterns Fails
-        >>> test_file = path_template_folder/ '{{TestPizzaCutter.option.no_copy}}.test/{{TestPizzaCutter.option.no_copy}}'
+        >>> test_file = path_template_dir/ '{{TestPizzaCutter.option.no_copy}}.test/{{TestPizzaCutter.option.no_copy}}'
         >>> pizza_cutter.path_remove_cutter_option_patterns(test_file)
         Traceback (most recent call last):
             ...
@@ -526,20 +557,20 @@ class PizzaCutter(object):
 
         >>> # Setup
         >>> path_test_dir = pathlib.Path(__file__).parent.parent / 'tests'
-        >>> path_template_folder = path_test_dir / 'pizzacutter_test_template_01'
-        >>> path_conf_file = path_template_folder / 'PizzaCutterTestConfig_01.py'
-        >>> path_project_folder = path_test_dir / 'pizzacutter_test_project_01'
-        >>> pizza_cutter = PizzaCutter(path_conf_file, path_template_folder, path_project_folder)
+        >>> path_template_dir = path_test_dir / 'pizzacutter_test_template_01'
+        >>> path_conf_file = path_template_dir / 'PizzaCutterTestConfig_01.py'
+        >>> path_target_dir = path_test_dir / 'pizzacutter_test_project_01'
+        >>> pizza_cutter = PizzaCutter(path_conf_file, path_template_dir, path_target_dir)
 
         >>> # test no replacements
-        >>> test_file = path_template_folder/ 'test.txt'
+        >>> test_file = path_template_dir/ 'test.txt'
         >>> pizza_cutter.path_replace_string_patterns(test_file)
         <BLANKLINE>
         ...Path('.../tests/pizzacutter_test_template_01/test.txt')
 
         >>> # test with replacement
         >>> pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.doctest}}'] = 'doctest'
-        >>> test_file = path_template_folder/ 'test_{{TestPizzaCutter.doctest}}.txt'
+        >>> test_file = path_template_dir/ 'test_{{TestPizzaCutter.doctest}}.txt'
         >>> pizza_cutter.path_replace_string_patterns(test_file)
         <BLANKLINE>
         ...Path('.../tests/pizzacutter_test_template_01/test_doctest.txt')
@@ -557,16 +588,16 @@ class PizzaCutter(object):
         result_path_source_file = pathlib.Path(*result_file_parts)
         return result_path_source_file
 
-    def path_replace_pathlib_patterns(self, path_source_object: pathlib.Path) -> pathlib.Path:
+    def path_replace_pathlib_patterns(self, path_source_path: pathlib.Path) -> pathlib.Path:
         """
         Returns the resolved Target Path
 
         >>> # Setup
         >>> path_test_dir = pathlib.Path(__file__).parent.parent / 'tests'
-        >>> path_template_folder = path_test_dir / 'pizzacutter_test_template_01'
-        >>> path_conf_file = path_template_folder / 'PizzaCutterTestConfig_01.py'
-        >>> path_project_folder = path_test_dir / 'pizzacutter_test_project_01'
-        >>> pizza_cutter = PizzaCutter(path_conf_file, path_template_folder, path_project_folder)
+        >>> path_template_dir = path_test_dir / 'pizzacutter_test_template_01'
+        >>> path_conf_file = path_template_dir / 'PizzaCutterTestConfig_01.py'
+        >>> path_target_dir = path_test_dir / 'pizzacutter_test_project_01'
+        >>> pizza_cutter = PizzaCutter(path_conf_file, path_template_dir, path_target_dir)
 
         >>> # test absolute replacement + relative replacement
         >>> import platform
@@ -575,20 +606,20 @@ class PizzaCutter(object):
         ... else:
         ...     pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.absolute}}'] = pathlib.Path('/test/doctest_absolute')
         >>> pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.relative}}'] = pathlib.Path('./doctest')
-        >>> test_file = path_template_folder/ '{{TestPizzaCutter.path.doctest.absolute}}/{{TestPizzaCutter.path.doctest.relative}}/test.txt'
+        >>> test_file = path_template_dir/ '{{TestPizzaCutter.path.doctest.absolute}}/{{TestPizzaCutter.path.doctest.relative}}/test.txt'
         >>> pizza_cutter.path_replace_pathlib_patterns(test_file)
         <BLANKLINE>
         ...Path('.../doctest_absolute/doctest/test.txt')
 
         >>> # test no replacements
-        >>> test_file = path_template_folder/ 'test.txt'
+        >>> test_file = path_template_dir/ 'test.txt'
         >>> pizza_cutter.path_replace_pathlib_patterns(test_file)
         <BLANKLINE>
         ...Path('.../tests/pizzacutter_test_project_01/test.txt')
 
         >>> # test relative replacements
         >>> pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.relative}}'] = pathlib.Path('./doctest')
-        >>> test_file = path_template_folder/ '{{TestPizzaCutter.path.doctest.relative}}/{{TestPizzaCutter.path.doctest.relative}}/test.txt'
+        >>> test_file = path_template_dir/ '{{TestPizzaCutter.path.doctest.relative}}/{{TestPizzaCutter.path.doctest.relative}}/test.txt'
         >>> pizza_cutter.path_replace_pathlib_patterns(test_file)
         <BLANKLINE>
         ...Path('.../tests/pizzacutter_test_project_01/doctest/doctest/test.txt')
@@ -599,7 +630,7 @@ class PizzaCutter(object):
         ... else:
         ...     pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.absolute}}'] = pathlib.Path('/test/doctest_absolute')
         >>> pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.relative}}'] = pathlib.Path('./doctest')
-        >>> test_file = path_template_folder/ '{{TestPizzaCutter.path.doctest.relative}}/{{TestPizzaCutter.path.doctest.absolute}}/test.txt'
+        >>> test_file = path_template_dir/ '{{TestPizzaCutter.path.doctest.relative}}/{{TestPizzaCutter.path.doctest.absolute}}/test.txt'
         >>> pizza_cutter.path_replace_pathlib_patterns(test_file)
         <BLANKLINE>
         ...Path('.../doctest_absolute/test.txt')
@@ -615,14 +646,14 @@ class PizzaCutter(object):
         ... else:
         ...     pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.absolute2}}'] = pathlib.Path('/test/doctest_absolute2')
 
-        >>> test_file = path_template_folder/ '{{TestPizzaCutter.path.doctest.absolute1}}/{{TestPizzaCutter.path.doctest.absolute2}}/test.txt'
+        >>> test_file = path_template_dir/ '{{TestPizzaCutter.path.doctest.absolute1}}/{{TestPizzaCutter.path.doctest.absolute2}}/test.txt'
         >>> pizza_cutter.path_replace_pathlib_patterns(test_file)
         <BLANKLINE>
         ...Path('.../doctest_absolute2/test.txt')
 
         >>> # test path replacement not complete part of a path (name is also a complete part !!!)
         >>> pizza_cutter.conf.pizza_cutter_patterns['{{TestPizzaCutter.path.doctest.relative}}'] = pathlib.Path('./doctest')
-        >>> test_file = path_template_folder/ '{{TestPizzaCutter.path.doctest.relative}}/{{TestPizzaCutter.path.doctest.relative}}.txt'
+        >>> test_file = path_template_dir/ '{{TestPizzaCutter.path.doctest.relative}}/{{TestPizzaCutter.path.doctest.relative}}.txt'
         >>> pizza_cutter.path_replace_pathlib_patterns(test_file)
         Traceback (most recent call last):
             ...
@@ -630,7 +661,7 @@ class PizzaCutter(object):
 
         """
 
-        source_object_parts = reversed(path_source_object.parts)
+        source_object_parts = reversed(path_source_path.parts)
         target_parts = list()
         absolute_path_found = False
         for source_object_part in source_object_parts:
@@ -645,14 +676,14 @@ class PizzaCutter(object):
                     if source_object_part != pattern:
                         raise RuntimeError(
                             'pathlib.Path patterns can only be one complete part of a path : Path: "{path_source_file}", Pattern: {pattern}'.format(
-                                path_source_file=path_source_object, pattern=pattern))
+                                path_source_file=path_source_path, pattern=pattern))
                     else:
                         target_object_part = pathlib.Path(replacement)
                         if target_object_part.is_absolute() and absolute_path_found:
                             logger.warning(
                                 'the resulting path might be unexpected, You have more then one absolute pathlib.Path pattern in the path: '
                                 '"{path_source_file}", Pattern: "{pattern}" points to "{replacement}"'.format(
-                                    path_source_file=path_source_object, pattern=pattern, replacement=replacement))
+                                    path_source_file=path_source_path, pattern=pattern, replacement=replacement))
 
             if not absolute_path_found:
                 target_parts.append(target_object_part)
@@ -663,13 +694,14 @@ class PizzaCutter(object):
         path_target_path = pathlib.Path(*target_parts).resolve()
 
         if absolute_path_found:
-            logger.warning('the resulting path of a template file might be unexpected, You have an absolute pathlib.Path pattern in the path: '
-                           '"{path_source_file}" points to "{path_target_path}"'.format(path_source_file=path_source_object,
-                                                                                        path_target_path=path_target_path))
+            if not self.quiet:
+                logger.warning('the resulting path of a template file might be unexpected, You have an absolute pathlib.Path pattern in the path: '
+                               '"{path_source_path}" points to "{path_target_path}"'.format(path_source_path=path_source_path,
+                                                                                            path_target_path=path_target_path))
         else:
             path_target_path = helpers.replace_source_dir_path_with_target_dir_path(pathlib_path=path_target_path,
-                                                                                    path_source_dir=self.path_template_folder,
-                                                                                    path_target_dir=self.path_project_folder)
+                                                                                    path_source_dir=self.path_template_dir,
+                                                                                    path_target_dir=self.path_target_dir)
         return path_target_path
 
     def get_path_template_subdirs_with_pattern(self) -> List[pathlib.Path]:
@@ -678,11 +710,11 @@ class PizzaCutter(object):
 
         >>> # Setup
         >>> path_test_dir = pathlib.Path(__file__).parent.parent / 'tests'
-        >>> path_template_folder = path_test_dir / 'pizzacutter_test_template_01'
-        >>> path_conf_file = path_template_folder / 'PizzaCutterTestConfig_01.py'
+        >>> path_template_dir = path_test_dir / 'pizzacutter_test_template_01'
+        >>> path_conf_file = path_template_dir / 'PizzaCutterTestConfig_01.py'
 
-        >>> path_project_folder = path_test_dir / 'pizzacutter_test_project_01'
-        >>> pizza_cutter = PizzaCutter(path_conf_file, path_template_folder, path_project_folder)
+        >>> path_target_dir = path_test_dir / 'pizzacutter_test_project_01'
+        >>> pizza_cutter = PizzaCutter(path_conf_file, path_template_dir, path_target_dir)
 
         >>> # TEST
         >>> pizza_cutter.get_path_template_subdirs_with_pattern()
@@ -691,7 +723,7 @@ class PizzaCutter(object):
         """
 
         template_subdirs_with_pattern: List[pathlib.Path] = list()
-        path_template_dir_subdirs = list(self.path_template_folder.glob('*/'))
+        path_template_dir_subdirs = list(self.path_template_dir.glob('*/'))
         for path_template_subdir in path_template_dir_subdirs:
             for pattern in self.conf.pizza_cutter_patterns.keys():
                 if pattern in path_template_subdir.name:
@@ -704,13 +736,13 @@ class PizzaCutter(object):
 
         >>> # Setup
         >>> path_test_dir = pathlib.Path(__file__).parent.parent / 'tests'
-        >>> path_template_folder = path_test_dir / 'pizzacutter_test_template_01'
-        >>> path_conf_file = path_template_folder / 'PizzaCutterTestConfig_01.py'
-        >>> path_project_folder = path_test_dir / 'pizzacutter_test_project_01'
-        >>> pizza_cutter = PizzaCutter(path_conf_file, path_template_folder, path_project_folder)
+        >>> path_template_dir = path_test_dir / 'pizzacutter_test_template_01'
+        >>> path_conf_file = path_template_dir / 'PizzaCutterTestConfig_01.py'
+        >>> path_target_dir = path_test_dir / 'pizzacutter_test_project_01'
+        >>> pizza_cutter = PizzaCutter(path_conf_file, path_template_dir, path_target_dir)
 
         >>> savedir = pathlib.Path.cwd().resolve()
-        >>> os.chdir(path_template_folder)
+        >>> os.chdir(path_template_dir)
 
         >>> # TEST
         >>> pizza_cutter.get_path_template_objects()
@@ -728,16 +760,16 @@ class PizzaCutter(object):
 
 
 def build(path_conf_file: pathlib.Path,
-          path_template_folder: Optional[pathlib.Path] = None,
-          path_target_folder: Optional[pathlib.Path] = None,
+          path_template_dir: Optional[pathlib.Path] = None,
+          path_target_dir: Optional[pathlib.Path] = None,
           dry_run: Optional[bool] = None,
           allow_overwrite: Optional[bool] = None,
           allow_outside_write: Optional[bool] = None,
           quiet: Optional[bool] = None) -> None:
 
     pizza_cutter = PizzaCutter(path_conf_file=path_conf_file,
-                               path_template_folder=path_template_folder,
-                               path_target_folder=path_target_folder,
+                               path_template_dir=path_template_dir,
+                               path_target_dir=path_target_dir,
                                dry_run=dry_run,
                                allow_overwrite=allow_overwrite,
                                allow_outside_write=allow_outside_write,

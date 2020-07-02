@@ -23,12 +23,12 @@ class PizzaCutterGetConfig(object):
                  # the path to the PizzaCutter conf File
                  pizza_cutter_path_conf_file: pathlib.Path,
                  # the path to the Template Folder - can be set by the conf File to the Directory the conf file sits - can be overridden by conf file
-                 pizza_cutter_path_template_folder: Optional[pathlib.Path] = None,
+                 pizza_cutter_path_template_dir: Optional[pathlib.Path] = None,
                  # the target path of the Project Folder - this should be the current Directory - can be overridden by conf file
-                 pizza_cutter_path_target_folder: Optional[pathlib.Path] = None):
+                 pizza_cutter_path_target_dir: Optional[pathlib.Path] = None):
 
         self.conf = pizzacutter_config.PizzaCutterConfigBase()
         reloaded_mod_conf = import_module.import_module_from_file(module_fullpath=pizza_cutter_path_conf_file, reload=True)
         self.conf = reloaded_mod_conf.PizzaCutterConfig(pizza_cutter_path_conf_file=pizza_cutter_path_conf_file,
-                                                        pizza_cutter_path_template_folder=pizza_cutter_path_template_folder,
-                                                        pizza_cutter_path_target_folder=pizza_cutter_path_target_folder)
+                                                        pizza_cutter_path_template_dir=pizza_cutter_path_template_dir,
+                                                        pizza_cutter_path_target_dir=pizza_cutter_path_target_dir)

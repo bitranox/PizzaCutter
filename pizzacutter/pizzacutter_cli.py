@@ -1,5 +1,5 @@
 # STDLIB
-import pathlib3x as pathlib
+import pathlib3x as pathlib  # type: ignore
 
 # EXT
 import click
@@ -45,16 +45,16 @@ def build(conf_file: str, template_dir: str = '', target_dir: str = '', dry_run:
     path_conf_file = pathlib.Path(conf_file).resolve()
 
     if template_dir:
-        path_template_folder = pathlib.Path(template_dir).resolve()
+        path_template_dir = pathlib.Path(template_dir).resolve()
     else:
-        path_template_folder = path_conf_file.parent
+        path_template_dir = path_conf_file.parent
 
     if target_dir:
-        path_target_folder = pathlib.Path(target_dir).resolve()
+        path_target_dir = pathlib.Path(target_dir).resolve()
     else:
-        path_target_folder = pathlib.Path.cwd().resolve()
+        path_target_dir = pathlib.Path.cwd().resolve()
 
-    pizzacutter.build(path_conf_file=path_conf_file, path_template_folder=path_template_folder, path_target_folder=path_target_folder,
+    pizzacutter.build(path_conf_file=path_conf_file, path_template_dir=path_template_dir, path_target_dir=path_target_dir,
                       dry_run=dry_run, allow_overwrite=overwrite, allow_outside_write=write_outside)
 
 

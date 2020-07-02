@@ -51,7 +51,7 @@ not
 do with cookiecutter :
 
 - Though PizzaCutter needs a little more complex `template file <https://github.com/bitranox/pizzacutter_default_python_template>`_ ,
-  but at the end You can get as complex as You like.
+  at the end You can get as complex as You like.
   Therefore You are not limited with functions or features provided by PizzaCutter, You can add or create yourself special features in the config file.
 - You can (and should) inherit config files from default config files - and just change there the few things You need to change.
   In the `example <https://github.com/bitranox/pizzacutter_default_python_template>`_ we have decent complex config file for a python project,
@@ -62,7 +62,7 @@ do with cookiecutter :
   .. code-block:: sh
 
         ---------------------
-        | Template          |       contains all the files with patterns to replace
+        | Template          |       contains all the files with patterns to replace, You can use unlimited templates in parallel !
         ---------^-----------
                  |
                  |
@@ -79,10 +79,10 @@ do with cookiecutter :
         ---------^-----------
 
         not limited in any direction - You can stack as many layers of configs as You need,
-        and You can have many configs in parallel working against the same template
+        and You can have many configs in parallel working against the same templates
 
 
-- It might sound more complicated then it is. Imagine You set Your Name and Email Adress in Your default config file -
+- It might sound more complicated than it is. Imagine You set Your Name and Email Adress in Your default config file -
   then You dont need to set it in Your project config anymore (unless You want to override that setting).
   By that way it is easy to manage a big number of projects with minimal effort.
 
@@ -91,15 +91,12 @@ do with cookiecutter :
   and another one for Your python project. Do whatever You want.
 - You can mark template files if they should be updated, copied or overwritten on existing projects
 - You can replace patterns in a file with the content of another file, it does not even have to be part of the template.
-- You can mark text lines to be deleted when empty after pattern replacement
+- You can mark text lines to be deleted when they would be empty after pattern replacement
 - You can use template files in different encodings and line-endings
 - You can pass string and pathlib.Path objects to the templates - allowing You a more flexible template structure
 - Hooks (little programs to run before or after creation or update) are defined in the configuration file and can point to external programs.
 - You can even make the configuration file executable, so it downloads the newest template itself, etc ...
-- our demo template works with with our project `rst_include <https://github.com/bitranox/rst_include>`_ to process RST files
-  and create a single README.rst out of Your .doc files
-- creates and updates automatically documentation for commandline help (for click cli)
-- PizzaCutter informs You about unfilled patterns in Your template (if You forget to define the replacement)
+- PizzaCutter informs You about unfilled patterns in Your template (if You forgot to define the pattern replacement)
 - Simply define your template variables in a simple python file. This gives You all the flexibility you have ever dreamed of !!
 
 .. code-block:: python
@@ -110,9 +107,9 @@ do with cookiecutter :
     class PizzaCutterConfig(PizzaCutterConfigBase):
         def __init__(self,
                      pizza_cutter_path_conf_file: pathlib.Path = pathlib.Path(__file__).parent.resolve(),
-                     pizza_cutter_path_template_folder: Optional[pathlib.Path] = None,
-                     pizza_cutter_path_target_folder: Optional[pathlib.Path] = None):
-            super().__init__(pizza_cutter_path_conf_file, pizza_cutter_path_template_folder, pizza_cutter_path_target_folder)
+                     pizza_cutter_path_template_dir: Optional[pathlib.Path] = None,
+                     pizza_cutter_path_target_dir: Optional[pathlib.Path] = None):
+            super().__init__(pizza_cutter_path_conf_file, pizza_cutter_path_template_dir, pizza_cutter_path_target_dir)
 
     # Pizza Cutter Configuration, can override by cli options
             self.pizza_cutter_allow_overwrite = True
@@ -133,6 +130,9 @@ do with cookiecutter :
             self.pizza_cutter_patterns['{{\PizzaCutter.year}}'] = '2013'
             self.pizza_cutter_patterns['{{\PizzaCutter.current_version}}'] = '0.1.1'
 
+        self.set_defaults()
+        self.set_patterns()
+
 well - that looks like a cookiecutter configuration, only a bit more complicated, so what is the difference ?
 In .XML Files You just can not program. What, if for instance You want to update the "release_date"
 to the current date automatically, every time You update Your project ?
@@ -145,7 +145,7 @@ With Pizzacutter its easy :
 
 This is where the flexibility starts - You can dynamically calculate and assign values in the config file.
 
-So easy, and so effective, just use a little python.
+So easy, so effective, just use python for Your config.
 
 
 
@@ -154,9 +154,9 @@ PizzaCutter is created and maintained with PizzaCutter !
 why not cookiecutter ?
 ======================
 cookiecutter is nice, dont get me wrong, and its out there for a long time - so a lot of people spent time and effort to create it. It has extensive
-documentation, support and user base,  which we dont have (now).
+documentation, support and user base,  which we dont have.
 At the first glance, cookiecutter looks easy, but if You want to do more advanced tasks, its getting complicated - and we really see no sense to write code in
-jinja templates with the limitations that come with that. An XML template file was simply not enough for us.
+jinja templates with the limitations that come with that. An XML config file was simply not enough for us.
 
 
 
@@ -164,12 +164,12 @@ features of the demo python template:
 =====================================
 - travis.yaml is created
 - cli help is automatically created (for click)
-- docs are created automatically. only "description.rst", "usage.rst" and "CHANGES.rst" should be edited by Yourself
+- README.rst is created automatically. only "description.rst", "usage.rst" and "CHANGES.rst" should be edited by Yourself
 - master configuration file as a base for your default- and project configurations with unlimited possibilities
-- on projects set up this way, the config files can be edited any time and the projects can be updated with one keypress.
-- a shell script for local continuous testing is included, see ".../tests/local_testscripts/run_testloop.sh"
+- for projects which are set up this way, the config files can be edited any time and the projects can be updated with one keypress.
+- a shell script for local continuous testing, see ".../tests/local_testscripts/run_testloop.sh"
 - a shell script to clean the project from all caches, eggs, dist and build directories, see ".../tests/local_testscripts/run_clean.sh"
-- a shell script to create Your secrets for Travis is included, see ".../travis_secrets/create_secrets.sh
+- a shell script to create Your secrets for Travis, see ".../travis_secrets/create_secrets.sh
 
 TODO
 ====

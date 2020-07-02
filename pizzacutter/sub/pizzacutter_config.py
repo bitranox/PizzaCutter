@@ -3,16 +3,16 @@ import pathlib
 from typing import Dict, Optional, Union
 
 
-# we need this construction to be able to override path_conf_file, path_template_folder, path_project_folder by commandline
+# we need this construction to be able to override path_conf_file, path_template_dir, path_target_dir by commandline
 # and to re-evaluate depending values
 class PizzaCutterConfigBase(object):
     def __init__(self,
                  # the path to the actual config File
                  pizza_cutter_path_conf_file: Optional[pathlib.Path] = None,
                  # the default for the template Folder is the actual directory of the given config File
-                 pizza_cutter_path_template_folder: Optional[pathlib.Path] = None,
+                 pizza_cutter_path_template_dir: Optional[pathlib.Path] = None,
                  # the project Folder is the current directory
-                 pizza_cutter_path_target_folder: Optional[pathlib.Path] = None):
+                 pizza_cutter_path_target_dir: Optional[pathlib.Path] = None):
 
         if pizza_cutter_path_conf_file is None:
             pizza_cutter_path_conf_file = pathlib.Path(__file__).resolve()
@@ -21,19 +21,19 @@ class PizzaCutterConfigBase(object):
                 raise FileNotFoundError('PizzaCutter config file "{}" does not exist'.format(pizza_cutter_path_conf_file))
             pizza_cutter_path_conf_file = pizza_cutter_path_conf_file.resolve()
 
-        if pizza_cutter_path_template_folder is None:
-            pizza_cutter_path_template_folder = pizza_cutter_path_conf_file.resolve().parent
+        if pizza_cutter_path_template_dir is None:
+            pizza_cutter_path_template_dir = pizza_cutter_path_conf_file.resolve().parent
         else:
-            if not pizza_cutter_path_template_folder.is_dir():
-                raise NotADirectoryError('Template Directory "{}" must be an existing Directory'.format(pizza_cutter_path_template_folder))
-            pizza_cutter_path_template_folder = pizza_cutter_path_template_folder.resolve()
+            if not pizza_cutter_path_template_dir.is_dir():
+                raise NotADirectoryError('Template Directory "{}" must be an existing Directory'.format(pizza_cutter_path_template_dir))
+            pizza_cutter_path_template_dir = pizza_cutter_path_template_dir.resolve()
 
-        if pizza_cutter_path_target_folder is None:
-            pizza_cutter_path_target_folder = pathlib.Path.cwd().resolve()
+        if pizza_cutter_path_target_dir is None:
+            pizza_cutter_path_target_dir = pathlib.Path.cwd().resolve()
 
         self.pizza_cutter_path_conf_file = pizza_cutter_path_conf_file
-        self.pizza_cutter_path_template_folder = pizza_cutter_path_template_folder
-        self.pizza_cutter_path_project_folder = pizza_cutter_path_target_folder
+        self.pizza_cutter_path_template_dir = pizza_cutter_path_template_dir
+        self.pizza_cutter_path_target_dir = pizza_cutter_path_target_dir
         self.pizza_cutter_options: Dict[str, str] = dict()
 
         # the settings from the CLI can only be overwritten by configuration files

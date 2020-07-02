@@ -33,5 +33,9 @@ class PizzaCutterConfig(PizzaCutterConfigBase):
 # Project Configuration - single point for all configuration of the project
 # ##############################################################################################################################################################
         # the name of the project, for instance for the travis repo slug
+        path_test_dir = pathlib.Path(__file__).parent.parent.resolve()
+        outside_target_dir = path_test_dir / 'outside_target_dir'
         self.project_dir = 'pizzacutter_test_project'
         self.pizza_cutter_patterns['{{TestPizzaCutter.project_dir}}'] = self.project_dir
+        self.pizza_cutter_patterns['{{TestPizzaCutter.doctest}}'] = 'doctest'
+        self.pizza_cutter_patterns['{{TestPizzaCutter.outside_target_dir}}'] = outside_target_dir

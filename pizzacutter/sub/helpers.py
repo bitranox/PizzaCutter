@@ -1,5 +1,5 @@
 # STDLIB
-import pathlib3x as pathlib
+import pathlib3x as pathlib  # type: ignore
 
 
 def path_startswith(path_object_to_test: pathlib.Path, path_object: pathlib.Path, resolve: bool = True) -> bool:
@@ -45,7 +45,7 @@ def create_target_directory(path_target_file_object: pathlib.Path) -> None:
 
 def replace_source_dir_path_with_target_dir_path(pathlib_path: pathlib.Path, path_source_dir: pathlib.Path, path_target_dir: pathlib.Path) -> pathlib.Path:
     """
-    TODO: put it in pathlibX
+    TODO: put it in pathlib3x
 
     >>> pathlib_path = pathlib.Path('/some/really/complicated/path/complicated/path.txt')
     >>> path_source_dir = pathlib.Path('/some/really')

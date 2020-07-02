@@ -1,2 +1,4 @@
 test.txt - no option
-{{PizzaCutter.test}}
+{{PizzaCutter.test_intentionally_unfilled_pattern}}
+{{PizzaCutter.test_intentionally_unfilled_pattern2}}
+{{PizzaCutter.test_intentionally_unfilled_pattern3}}{{PizzaCutter.test_intentionally_unfilled_pattern4}}
