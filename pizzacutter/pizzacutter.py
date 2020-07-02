@@ -52,6 +52,12 @@ class PizzaCutter(object):
         >>> # Test init, only conf file passed, quiet
         >>> pizza_cutter = PizzaCutter(path_conf_file=path_conf_file, quiet=True)
 
+        >>> # Test init, conf file not found
+        >>> pizza_cutter = PizzaCutter(path_conf_file=pathlib.Path(), quiet=True)
+        Traceback (most recent call last):
+        ...
+        FileNotFoundError: the config file ... can not be found
+
         """
 
         if not path_conf_file.is_file():
@@ -126,6 +132,12 @@ class PizzaCutter(object):
         >>> pizza_cutter.build()
         >>> assert not path_outside_target_dir.exists()
 
+        >>> # test update project, outside write not allowed, dry run to see overwrite warnings
+        >>> pizza_cutter.dry_run = True
+        >>> pizza_cutter.build()
+        >>> assert not path_outside_target_dir.exists()
+        >>> pizza_cutter.dry_run = False
+
         >>> # test update project, outside write allowed
         >>> pizza_cutter = PizzaCutter(path_conf_file=path_conf_file, path_template_dir=path_template_dir, path_target_dir=path_target_dir,
         ...                            allow_outside_write=True, quiet=True)
@@ -161,13 +173,12 @@ class PizzaCutter(object):
         """
         replace all the patterns in the source file
         it is already prepared for the function that You can include the content of other files into one file -
-        we dont know if we will ever finish that idea, because we just can make the replacement in the config file,
-        as long as there are no other string replacements in that included file.
+        we dont know if we will ever finish that idea, because we simply can make that replacement in the config file
         """
 
-        # this is in preparation for the function if we can include the content of files into other files
-        if path_source_file in self.file_stack:
-            raise RecursionError('Recursion on path includes : \n {}'.format(pprint.pformat(self.file_stack)))
+        # this is already preparation when we are able to include the content of other files
+        if path_source_file in self.file_stack:                                                                     # pragma: no cover
+            raise RecursionError('Recursion on path includes : \n {}'.format(pprint.pformat(self.file_stack)))      # pragma: no cover
         self.file_stack.append(path_source_file)
 
         # this is in preparation for the function if we can include the content of files into other files
@@ -409,7 +420,14 @@ class PizzaCutter(object):
                 helpers.create_target_directory(path_target_object_resolved.parent)
                 # because sometime we receive "permission denied" when overwriting the file (weired)
                 path_target_object_resolved.unlink(missing_ok=True)
-                shutil.copy2(str(path_source_object), str(path_target_object_resolved))
+                try:
+                    shutil.copy2(str(path_source_object), str(path_target_object_resolved))
+                except Exception:
+                    msg = 'source: {} Exists: {}, isFile: {}, target: {}'.format(path_source_object,
+                                                                                 path_source_object.exists(),
+                                                                                 path_source_object.is_file(),
+                                                                                 path_target_object_resolved)
+                    raise FileNotFoundError(msg)
 
     def do_not_copy(self, file_object: pathlib.Path) -> bool:
         """ Check if the pattern for option 'object_no_copy' in file_object_name """
@@ -431,12 +449,12 @@ class PizzaCutter(object):
             return skip_outside_write
 
         if self.allow_outside_write:
-            if self.dry_run and not quiet:
+            if self.dry_run:
                 logger.info('object outside project directory: "{}"'.format(path_target_object))
             skip_outside_write = False
         else:
             msg = 'object outside project directory not allowed: "{}"'.format(path_target_object)
-            if self.dry_run and not quiet:
+            if self.dry_run:
                 logger.info(msg)
             else:
                 if not quiet:
