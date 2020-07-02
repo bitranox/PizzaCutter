@@ -2,10 +2,10 @@
 import pathlib3x as pathlib  # type: ignore
 
 
-def path_startswith(path_object_to_test: pathlib.Path, path_object: pathlib.Path, resolve: bool = True) -> bool:
+def path_startswith(path_object_to_test: pathlib.Path, path_object: pathlib.Path) -> bool:
     """
     tests if the "path_object_to_test" starts with path_object
-    TODO: put it in pathlibX
+    we resolve here before, because symlinks might be involved
 
     >>> source_folder = pathlib.Path('/test1/test2')
 
@@ -19,20 +19,8 @@ def path_startswith(path_object_to_test: pathlib.Path, path_object: pathlib.Path
     >>> assert path_startswith(test_folder4, source_folder)
 
     """
-    if resolve:
-        path_object_to_test = path_object_to_test.resolve()
-        path_object = path_object.resolve()
 
-    path_object_parts = list(path_object.parts)
-    path_object_to_test_parts = list(path_object_to_test.parts)
-
-    if len(path_object_to_test_parts) < len(path_object_parts):
-        return False
-
-    if path_object_to_test_parts[:len(path_object_parts)] == path_object_parts:
-        return True
-    else:
-        return False
+    return path_object_to_test.resolve().is_relative_to(path_object.resolve())
 
 
 def create_target_directory(path_target_file_object: pathlib.Path) -> None:
