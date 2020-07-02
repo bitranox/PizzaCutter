@@ -123,8 +123,9 @@ class PizzaCutter(object):
         >>> shutil.rmtree(path_outside_target_dir, ignore_errors=True)
 
 
-        >>> # Test create project, outside write not allowed,
+        >>> # Test create project, outside write not allowed, overwrite allowed
         >>> pizza_cutter = PizzaCutter(path_conf_file=path_conf_file, path_template_dir=path_template_dir, path_target_dir=path_target_dir)
+        >>> pizza_cutter.allow_overwrite = True
         >>> pizza_cutter.build()
         >>> assert not path_outside_target_dir.exists()
 
@@ -133,7 +134,7 @@ class PizzaCutter(object):
         >>> pizza_cutter.build()
         >>> assert not path_outside_target_dir.exists()
 
-        >>> # test update project, outside write not allowed, quiet = True, dry_run = True, allow_overwrite=True
+        >>> # test update project, outside write not allowed, quiet = True, dry_run = True
         >>> pizza_cutter.quite = False
         >>> pizza_cutter.dry_run = True
         >>> pizza_cutter.build()
