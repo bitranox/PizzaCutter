@@ -16,7 +16,7 @@ class PizzaCutterConfig(PizzaCutterConfigBase):
         super().__init__(pizza_cutter_path_conf_file, pizza_cutter_path_template_dir, pizza_cutter_path_target_dir)
 
 # ##############################################################################################################################################################
-# PizzaCutterConfiguration - those values are only considered if the config is trusted (cli option --trusted)
+# PizzaCutterConfiguration
 # ##############################################################################################################################################################
 
         self.pizza_cutter_allow_overwrite = False
