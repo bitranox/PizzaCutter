@@ -40,7 +40,7 @@ Its cookiecutter on steroids.
 
    {{\PizzaCutter.repo_name}}/{{\PizzaCutter.repo_name}}/{{\PizzaCutter.repo_name}}.py
 
-- Supports unlimited levels of directory nesting.
+- Supports unlimited levels of directory nesting. (beware of possible path length limitations, especially on Travis Windows builds)
 - 100% of templating is done with just (bytes) replace function. No Jinja2.
 
 Why PizzaCutter?

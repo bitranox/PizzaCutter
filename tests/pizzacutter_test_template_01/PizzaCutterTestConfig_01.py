@@ -37,4 +37,3 @@ class PizzaCutterConfig(PizzaCutterConfigBase):
         # the name of the project, for instance for the travis repo slug
         self.project_dir = 'pizzacutter_test_project'
         self.pizza_cutter_patterns['{{TestPizzaCutter.project_dir}}'] = self.project_dir
-
