@@ -28,6 +28,8 @@ class PizzaCutterConfig(PizzaCutterConfigBase):
         self.pizza_cutter_options['object_no_copy'] = '{{TestPizzaCutter.option.no_copy}}'
         self.pizza_cutter_options['object_no_overwrite'] = '{{TestPizzaCutter.option.no_overwrite}}'
 
+        # redefine for doctest
+        self.pizzacutter_pattern_prefixes = ['{{PizzaCutter.', '{{cookiecutter.', '{{TestPizzaCutter']
 
 # ##############################################################################################################################################################
 # Project Configuration - single point for all configuration of the project
@@ -35,3 +37,4 @@ class PizzaCutterConfig(PizzaCutterConfigBase):
         # the name of the project, for instance for the travis repo slug
         self.project_dir = 'pizzacutter_test_project'
         self.pizza_cutter_patterns['{{TestPizzaCutter.project_dir}}'] = self.project_dir
+

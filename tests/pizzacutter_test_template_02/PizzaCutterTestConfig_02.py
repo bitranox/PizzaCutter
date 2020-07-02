@@ -28,6 +28,8 @@ class PizzaCutterConfig(PizzaCutterConfigBase):
         self.pizza_cutter_options['object_no_copy'] = '{{TestPizzaCutter.option.no_copy}}'
         self.pizza_cutter_options['object_no_overwrite'] = '{{TestPizzaCutter.option.no_overwrite}}'
 
+        # redefine for doctest
+        self.pizzacutter_pattern_prefixes = ['{{PizzaCutter.', '{{cookiecutter.', '{{TestPizzaCutter']
 
 # ##############################################################################################################################################################
 # Project Configuration - single point for all configuration of the project
