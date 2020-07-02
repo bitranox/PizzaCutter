@@ -8,19 +8,19 @@ from typing import Union
 
 def import_module_from_file(module_fullpath: Union[pathlib.Path, str], reload: bool = False):   # type: ignore
     """
-    TODO : replace with lib_import when avail maybe take from pycharm
+    TODO : replace with lib_import when avail maybe take from pycharm, there we do the full coverage ...
 
     >>> # re-import from file
     >>> import_module_from_file(pathlib.Path(__file__))
-    <module 'import_module' from '.../import_module.py'>
+    <module 'import_module' from '...import_module.py'>
 
     >>> # re-import from file without extension
     >>> import_module_from_file(pathlib.Path(__file__).with_suffix(''))
-    <module 'import_module' from '.../import_module.py'>
+    <module 'import_module' from '...import_module.py'>
 
     >>> # re-import from file, reload = True
     >>> import_module_from_file(pathlib.Path(__file__), reload=True)
-    <module 'import_module' from '.../import_module.py'>
+    <module 'import_module' from '...import_module.py'>
 
     >>> # import from non-existing file, and invalid module name. reload = True
 
@@ -28,7 +28,7 @@ def import_module_from_file(module_fullpath: Union[pathlib.Path, str], reload: b
     >>> import_module_from_file(pathlib.Path(__file__).with_suffix('.non_existing'), reload=True)
     Traceback (most recent call last):
     ...
-    FileNotFoundError: module ".../import_module.non_existing.py" not found
+    FileNotFoundError: module "...import_module.non_existing.py" not found
 
     """
     module_fullpath = pathlib.Path(module_fullpath)
