@@ -156,7 +156,6 @@ class PizzaCutter(object):
         >>> pizza_cutter.build()
         >>> assert path_outside_target_dir.exists()
 
-
         >>> # Teardown
         >>> shutil.rmtree(path_target_dir, ignore_errors=True)
         >>> shutil.rmtree(path_outside_target_dir, ignore_errors=True)

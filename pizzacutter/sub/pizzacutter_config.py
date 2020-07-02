@@ -43,7 +43,7 @@ class PizzaCutterConfigBase(object):
         self.pizza_cutter_quiet = False
 
         # for patterns to look out after all replacements, in order to find unfilled patterns
-        self.pizzacutter_pattern_prefixes = ['{{PizzaCutter.', '{{cookiecutter.']
+        self.pizzacutter_pattern_prefixes = ['{{PizzaCutter.', '{{cookiecutter.', '{{TestPizzaCutter']
 
         # ######################################################################################################################################################
         # replacement patterns
