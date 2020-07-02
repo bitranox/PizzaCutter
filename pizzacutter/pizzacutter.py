@@ -138,9 +138,15 @@ class PizzaCutter(object):
         >>> assert not path_outside_target_dir.exists()
         >>> pizza_cutter.dry_run = False
 
-        >>> # test update project, outside write allowed
-        >>> pizza_cutter = PizzaCutter(path_conf_file=path_conf_file, path_template_dir=path_template_dir, path_target_dir=path_target_dir,
-        ...                            allow_outside_write=True, quiet=True)
+        >>> # test update project, outside write allowed, dry run, not quiet
+        >>> pizza_cutter.dry_run = True
+        >>> pizza_cutter.quite = False
+        >>> pizza_cutter.build()
+        >>> assert path_outside_target_dir.exists()
+
+        >>> # test update project, outside write allowed, no dry run, quiet
+        >>> pizza_cutter.dry_run = False
+        >>> pizza_cutter.quite = True
         >>> pizza_cutter.build()
         >>> assert path_outside_target_dir.exists()
 
