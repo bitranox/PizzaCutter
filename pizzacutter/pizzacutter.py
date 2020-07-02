@@ -139,12 +139,14 @@ class PizzaCutter(object):
         >>> pizza_cutter.dry_run = False
 
         >>> # test update project, outside write allowed, dry run, not quiet
+        >>> pizza_cutter.allow_outside_write = True
         >>> pizza_cutter.dry_run = True
         >>> pizza_cutter.quite = False
         >>> pizza_cutter.build()
-        >>> assert path_outside_target_dir.exists()
+        >>> assert not path_outside_target_dir.exists()
 
         >>> # test update project, outside write allowed, no dry run, quiet
+        >>> pizza_cutter.allow_outside_write = True
         >>> pizza_cutter.dry_run = False
         >>> pizza_cutter.quite = True
         >>> pizza_cutter.build()
