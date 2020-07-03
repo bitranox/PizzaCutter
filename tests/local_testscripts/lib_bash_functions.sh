@@ -99,7 +99,7 @@ function cleanup() {
 function run_pytest() {
   # run pytest, accepts additional pytest parameters like --disable-warnings and so on
   my_banner "running pytest with settings from pytest.ini, mypy.ini and conftest.py"
-  if ! python3 -m pytest "${project_root_dir}" --disable-warnings "$@"; then
+  if ! python3 -m pytest "${project_root_dir}" "$@"; then
     my_banner_warning "pytest ERROR"
     beep
     sleep "${sleeptime_on_error}"

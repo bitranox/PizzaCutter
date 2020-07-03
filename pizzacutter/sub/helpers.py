@@ -20,7 +20,7 @@ def path_startswith(path_object_to_test: pathlib.Path, path_object: pathlib.Path
 
     """
 
-    return path_object_to_test.resolve().is_relative_to(path_object.resolve())
+    return bool(path_object_to_test.resolve().is_relative_to(path_object.resolve()))
 
 
 def create_target_directory(path_target_file_object: pathlib.Path) -> None:
