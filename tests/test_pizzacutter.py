@@ -65,6 +65,12 @@ def test_pizzacutter(pizza_cutter_instance, pizza_cutter_quiet, pizza_cutter_dry
     pizza_cutter_instance.build()
     assert pizza_cutter_instance.path_target_dir.exists() is not pizza_cutter_instance.dry_run
     assert get_outside_target_dir().exists() == (pizza_cutter_allow_outside_write and not pizza_cutter_dry_run)
+    # test dry_run on an existing target
+    if pizza_cutter_dry_run:
+        pizza_cutter_instance.dry_run = False
+        pizza_cutter_instance.build()
+        pizza_cutter_instance.dry_run = True
+        pizza_cutter_instance.build()
 
 
 def get_outside_target_dir() -> pathlib.Path:
