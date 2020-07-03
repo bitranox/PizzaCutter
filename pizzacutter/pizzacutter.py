@@ -113,53 +113,6 @@ class PizzaCutter(object):
         """
         replaces the patterns in each file
 
-        >>> # Setup
-        >>> path_test_dir = pathlib.Path(__file__).parent.parent.resolve() / 'tests'
-        >>> path_template_dir = path_test_dir / 'pizzacutter_test_template_02'
-        >>> path_target_dir = path_test_dir / 'pizzacutter_test_target_02'
-        >>> path_outside_target_dir = path_test_dir / 'outside_target_dir'
-        >>> path_conf_file = path_template_dir / 'PizzaCutterTestConfig_02.py'
-        >>> shutil.rmtree(path_target_dir, ignore_errors=True)
-        >>> shutil.rmtree(path_outside_target_dir, ignore_errors=True)
-
-
-        >>> # Test create project, outside write not allowed, overwrite allowed
-        >>> pizza_cutter = PizzaCutter(path_conf_file=path_conf_file, path_template_dir=path_template_dir, path_target_dir=path_target_dir)
-        >>> pizza_cutter.build()
-        >>> assert not path_outside_target_dir.exists()
-
-        >>> pizza_cutter.quite = False
-        >>> pizza_cutter.dry_run = False
-        >>> pizza_cutter.allow_overwrite = True
-        >>> pizza_cutter.allow_outside_write = False
-        >>> pizza_cutter.build()
-        >>> assert not path_outside_target_dir.exists()
-
-        >>> pizza_cutter.quite = False
-        >>> pizza_cutter.dry_run = True
-        >>> pizza_cutter.allow_overwrite = True
-        >>> pizza_cutter.allow_outside_write = False
-        >>> pizza_cutter.build()
-        >>> assert not path_outside_target_dir.exists()
-
-        >>> pizza_cutter.quite = True
-        >>> pizza_cutter.dry_run = True
-        >>> pizza_cutter.allow_overwrite = False
-        >>> pizza_cutter.allow_outside_write = True
-        >>> pizza_cutter.build()
-        >>> assert not path_outside_target_dir.exists()
-
-        >>> pizza_cutter.quite = False
-        >>> pizza_cutter.dry_run = False
-        >>> pizza_cutter.allow_overwrite = True
-        >>> pizza_cutter.allow_outside_write = True
-        >>> pizza_cutter.build()
-        >>> assert path_outside_target_dir.exists()
-
-        >>> # Teardown
-        >>> shutil.rmtree(path_target_dir, ignore_errors=True)
-        >>> shutil.rmtree(path_outside_target_dir, ignore_errors=True)
-
         """
 
         path_source_objects = self.get_path_template_objects()
