@@ -234,6 +234,8 @@ Its simple but beautiful. Tell me if You miss anything.
 automated tests, Travis Matrix, Documentation, Badges, etc. are managed with `PizzaCutter <https://github
 .com/bitranox/PizzaCutter>`_ (cookiecutter on steroids)
 
+Python version required: 3.6.0 or newer
+
 tested on linux "bionic" with python 3.6, 3.7, 3.8, 3.8-dev, pypy3
 
 `100% code coverage <https://codecov.io/gh/bitranox/PizzaCutter>`_, codestyle checking ,mypy static type checking ,tested under `Linux, macOS, Windows <https://travis-ci.org/bitranox/PizzaCutter>`_, automatic daily builds and monitoring

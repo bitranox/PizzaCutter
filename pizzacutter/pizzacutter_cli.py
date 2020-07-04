@@ -1,5 +1,5 @@
 # STDLIB
-import pathlib3x as pathlib  # type: ignore
+import pathlib3x as pathlib
 
 # EXT
 import click

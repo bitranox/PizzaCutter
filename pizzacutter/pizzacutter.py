@@ -6,7 +6,7 @@ import shutil
 from typing import List, Optional, Union, BinaryIO
 
 # OWN
-import pathlib3x as pathlib  # type: ignore
+import pathlib3x as pathlib
 
 try:
     from .sub import get_config
@@ -675,9 +675,7 @@ class PizzaCutter(object):
                                '"{path_source_path}" points to "{path_target_path}"'.format(path_source_path=path_source_path,
                                                                                             path_target_path=path_target_path))
         else:
-            path_target_path = helpers.replace_source_dir_path_with_target_dir_path(pathlib_path=path_target_path,
-                                                                                    path_source_dir=self.path_template_dir,
-                                                                                    path_target_dir=self.path_target_dir)
+            path_target_path = path_target_path.replace_parts(self.path_template_dir.resolve(), self.path_target_dir.resolve())
         return path_target_path
 
     def get_path_template_subdirs_with_pattern(self) -> List[pathlib.Path]:

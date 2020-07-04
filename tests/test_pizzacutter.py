@@ -5,7 +5,7 @@ from typing import Any
 import logging
 
 # OWN
-import pathlib3x as pathlib     # type: ignore
+import pathlib3x as pathlib
 
 # proj
 import pizzacutter

@@ -1,5 +1,5 @@
 # stdlib
-import pathlib
+import pathlib3x as pathlib
 from typing import Dict, Optional, Union
 
 

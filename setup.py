@@ -6,11 +6,11 @@ see : https://docs.python.org/3.8/distutils/setupscript.html
 import codecs
 import os
 import pathlib
+import sys
 from typing import List
 
 from setuptools import setup                # type: ignore
 from setuptools import find_packages
-
 
 def is_travis_deploy() -> bool:
     if 'travis_deploy' in os.environ:
@@ -86,7 +86,7 @@ if __name__ == '__main__':
           version='0.1.0',
           url='https://github.com/bitranox/PizzaCutter',
           packages=find_packages(),
-          package_data={'pizzacutter': ['py.typed']},
+          package_data={'pizzacutter': ['py.typed', '*.pyi', '__init__.pyi']},
           description='create and update projects from project templates',
           long_description=long_description,
           long_description_content_type='text/x-rst',
@@ -101,5 +101,6 @@ if __name__ == '__main__':
           # minimally needs to run the setup script, dependencies needs also to put here for "setup.py install test"
           # dependencies must not be put here for pip install
           setup_requires=setup_requires,
-          zip_save=False
+          zip_save=False,
+          python_requires=">=3.6.0"
           )

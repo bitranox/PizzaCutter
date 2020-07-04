@@ -1,7 +1,7 @@
 # STDLIB
 import importlib
 import importlib.util
-import pathlib
+import pathlib3x as pathlib
 import sys
 from typing import Union
 
