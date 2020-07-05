@@ -13,6 +13,22 @@ class PizzaCutterConfigBase(object):
                  pizza_cutter_path_template_dir: Optional[pathlib.Path] = None,
                  # the project Folder is the current directory
                  pizza_cutter_path_target_dir: Optional[pathlib.Path] = None):
+        """
+        The Base Class for the Pizza Cutter Configuration
+
+        >>> # Test Config File not found
+        >>> config = PizzaCutterConfigBase(pizza_cutter_path_conf_file=pathlib.Path('not_existing_conf_file'))
+        Traceback (most recent call last):
+        ...
+        FileNotFoundError: PizzaCutter config file "not_existing_conf_file" does not exist
+
+        >>> # Test Config File not found
+        >>> config = PizzaCutterConfigBase(pizza_cutter_path_template_dir=pathlib.Path('not_existing_template_directory'))
+        Traceback (most recent call last):
+        ...
+        NotADirectoryError: Template Directory "not_existing_template_directory" must be an existing Directory
+
+        """
 
         if pizza_cutter_path_conf_file is None:
             pizza_cutter_path_conf_file = pathlib.Path(__file__).resolve()
