@@ -68,14 +68,15 @@ class PizzaCutter(object):
                                                     pizza_cutter_path_target_dir=path_target_dir).conf
 
         if path_template_dir is None:
-            self.path_template_dir = self.conf.pizza_cutter_path_template_dir
+            # we call again pathlib.Path, to be sure it is pathlib3x Type
+            self.path_template_dir = pathlib.Path(self.conf.pizza_cutter_path_template_dir)
         else:
-            self.path_template_dir = path_template_dir
+            self.path_template_dir = pathlib.Path(path_template_dir)
 
         if path_target_dir is None:
-            self.path_target_dir = self.conf.pizza_cutter_path_target_dir
+            self.path_target_dir = pathlib.Path(self.conf.pizza_cutter_path_target_dir)
         else:
-            self.path_target_dir = path_target_dir
+            self.path_target_dir = pathlib.Path(path_target_dir)
 
         if allow_overwrite is None:
             self.allow_overwrite = self.conf.pizza_cutter_allow_overwrite
@@ -342,7 +343,7 @@ class PizzaCutter(object):
         >>> pizza_cutter = PizzaCutter(path_conf_file, path_template_dir, path_target_dir)
 
         >>> pizza_cutter = PizzaCutter(path_conf_file, path_template_dir, path_target_dir)
-        >>> shutil.rmtree(path_target_dir, ignore_errors=True)
+        >>> path_target_dir.rmtree(ignore_errors=True)
 
         >>> # Test Create Files
         >>> pizza_cutter = PizzaCutter(path_conf_file=path_conf_file, \
@@ -357,7 +358,7 @@ class PizzaCutter(object):
         >>> assert len(list(path_expected_folder.glob('./**/*'))) == len(list(path_target_dir.glob('./**/*')))
 
         >>> # Teardown
-        >>> shutil.rmtree(path_target_dir)
+        >>> path_target_dir.rmtree(ignore_errors=True)
 
 
         """
@@ -380,12 +381,12 @@ class PizzaCutter(object):
                 continue
 
             if path_source_object.is_dir():
-                helpers.create_target_directory(path_target_object_resolved)
+                path_target_object_resolved.mkdir(parents=True, exist_ok=True)
             else:
-                helpers.create_target_directory(path_target_object_resolved.parent)
+                path_target_object_resolved.parent.mkdir(parents=True, exist_ok=True)
                 # because sometime we receive "permission denied" when overwriting the file (weired)
                 path_target_object_resolved.unlink(missing_ok=True)
-                shutil.copy2(str(path_source_object), str(path_target_object_resolved))
+                path_source_object.copy2(path_target_object_resolved)
 
     def do_not_copy(self, file_object: pathlib.Path) -> bool:
         """ Check if the pattern for option 'object_no_copy' in file_object_name """
@@ -453,30 +454,96 @@ class PizzaCutter(object):
             if self.skip_write_outside_project_folder(path_target_object, quiet=True):
                 continue
 
-            self.log_unfilled_pattern_in_object_name(path_target_object)
+            self.log_unfilled_patterns_in_path(path_target_object)
             self.log_unfilled_pattern_in_object(path_target_object)
 
-    def log_unfilled_pattern_in_object_name(self, path_object: pathlib.Path) -> None:
-        object_path_name = str(path_object)
-        for prefix in self.conf.pizzacutter_pattern_prefixes:
-            if not self.quiet and prefix in object_path_name:
-                full_prefix = prefix + object_path_name.split(prefix, 1)[1].split('}}', 1)[0] + '}}'
-                logger.warning('unfilled Pattern "{full_prefix}" in Filename "{object_path_name}"'.format(full_prefix=full_prefix,
-                                                                                                          object_path_name=object_path_name))
+    def log_unfilled_patterns_in_path(self, _path: pathlib.Path) -> List[str]:
+        """
+        logs unfilled patterns in the path name of a file
 
-    def log_unfilled_pattern_in_object(self, path_object: pathlib.Path) -> None:
+        >>> # Setup
+        >>> logger=logging.getLogger()
+        >>> logging.basicConfig()
+        >>> logger.level=logging.DEBUG
+
+        >>> path_test_dir = pathlib.Path(__file__).parent.parent / 'tests'
+        >>> path_template_dir = path_test_dir / 'pizzacutter_test_template_02'
+        >>> path_conf_file = path_template_dir / 'PizzaCutterTestConfig_02.py'
+        >>> path_target_dir = path_test_dir / 'pizzacutter_test_project_02'
+        >>> pizza_cutter = PizzaCutter(path_conf_file, path_template_dir, path_target_dir)
+
+        >>> path_test_file = pathlib.Path('some_file')
+        >>> pizza_cutter.log_unfilled_patterns_in_path(path_test_file)
+        []
+        >>> path_test_file = pathlib.Path('some_file{{TestPizzaCutter}xy')
+        >>> pizza_cutter.log_unfilled_patterns_in_path(path_test_file)
+        ['missing closing brackets for "{{TestPizzaCutter"']
+
+        >>> path_test_file = pathlib.Path('some_file{{TestPizzaCutter}}{{TestPizzaCutter.some.pattern}}xy')
+        >>> pizza_cutter.log_unfilled_patterns_in_path(path_test_file)
+        ['unfilled pattern "{{TestPizzaCutter}}"', 'unfilled pattern "{{TestPizzaCutter.some.pattern}}"']
+
+        """
+
+        str_path = str(_path)
+        l_patterns: List[str] = list()
+        # we think a pattern never will be that long
+        max_pattern_length = 160
+        for pattern_prefix in self.conf.pizzacutter_pattern_prefixes:
+            if not self.quiet:
+                for position in helpers.findall(pattern_prefix, str_path):
+                    current_slice = str_path[position: position + max_pattern_length]
+                    if '}}' not in current_slice:
+                        l_patterns.append('missing closing brackets for "{}"'.format(pattern_prefix))
+                    else:
+                        full_pattern = current_slice.split('}}', 1)[0] + '}}'
+                        l_patterns.append('unfilled pattern "{}"'.format(full_pattern))
+                if l_patterns:
+                    patterns = '\n'.join(l_patterns)
+                    logger.warning('unfilled or malformed patterns in filename "{str_path}": \n{patterns}'.format(str_path=str_path, patterns=patterns))
+        return l_patterns
+
+    def log_unfilled_pattern_in_object(self, path_object: pathlib.Path) -> List[str]:
         """
         find unfilled patterns in the file contents.
         we search for bytes, because we dont know the encoding of the file
+
+        >>> # Setup
+        >>> logger=logging.getLogger()
+        >>> logging.basicConfig()
+        >>> logger.level=logging.DEBUG
+
+        >>> path_test_dir = pathlib.Path(__file__).parent.parent / 'tests'
+        >>> path_template_dir = path_test_dir / 'pizzacutter_test_template_02'
+        >>> path_conf_file = path_template_dir / 'PizzaCutterTestConfig_02.py'
+        >>> path_target_dir = path_test_dir / 'pizzacutter_test_project_02'
+        >>> pizza_cutter = PizzaCutter(path_conf_file, path_template_dir, path_target_dir)
+
+        >>> # Test
+        >>> path_test_file = path_template_dir / '{{TestPizzaCutter.project_dir}}/malformed.txt'
+        >>> pizza_cutter.log_unfilled_pattern_in_object(path_test_file)
+        ['missing closing brackets for "{{TestPizzaCutter.missing_brackets"', 'unfilled pattern "{{TestPizzaCutter.unfilled_pattern}}"']
+
         """
+        l_patterns: List[str] = list()
         if path_object.is_file():
+            # we think a pattern never will be that long
+            max_pattern_length = 160
             content_bytes = path_object.read_bytes()
-            for prefix in self.conf.pizzacutter_pattern_prefixes:
-                prefix_bytes = prefix.encode('utf-8')
-                if prefix_bytes in content_bytes:
-                    full_prefix_bytes = prefix_bytes + content_bytes.split(prefix_bytes, 1)[1].split(b'}}', 1)[0] + b'}}'
-                    full_prefix = full_prefix_bytes.decode('utf-8')
-                    logger.warning('unfilled Pattern "{full_prefix}" in File "{path_object}"'.format(full_prefix=full_prefix, path_object=path_object))
+            for pattern_prefix in self.conf.pizzacutter_pattern_prefixes:
+                pattern_prefix_bytes = pattern_prefix.encode('utf-8')
+                for position in helpers.findall(pattern_prefix_bytes, content_bytes):
+                    current_slice = content_bytes[position: position + max_pattern_length].split(b'\n', 1)[0]
+                    if b'}}' not in current_slice:
+                        current_slice = b'{{' + current_slice[2:].split(b'{{', 1)[0].split(b'}', 1)[0]
+                        l_patterns.append('missing closing brackets for "{}"'.format(current_slice.decode('utf-8')))
+                    else:
+                        full_pattern_bytes = current_slice.split(b'}}', 1)[0] + b'}}'
+                        l_patterns.append('unfilled pattern "{}"'.format(full_pattern_bytes.decode('utf-8')))
+            if l_patterns:
+                patterns = '\n'.join(l_patterns)
+                logger.warning('unfilled or malformed patterns in file "{path_object}": \n{patterns}'.format(path_object=path_object, patterns=patterns))
+        return l_patterns
 
     def path_remove_cutter_option_patterns(self, path_source_file: pathlib.Path) -> pathlib.Path:
         """

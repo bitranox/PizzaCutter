@@ -19,6 +19,8 @@ class PizzaCutterConfigBase(object):
         else:
             if not pizza_cutter_path_conf_file.is_file():
                 raise FileNotFoundError('PizzaCutter config file "{}" does not exist'.format(pizza_cutter_path_conf_file))
+            # make sure it is a pathlib3x object
+            pizza_cutter_path_conf_file = pathlib.Path(pizza_cutter_path_conf_file)
             pizza_cutter_path_conf_file = pizza_cutter_path_conf_file.resolve()
 
         if pizza_cutter_path_template_dir is None:
@@ -26,10 +28,15 @@ class PizzaCutterConfigBase(object):
         else:
             if not pizza_cutter_path_template_dir.is_dir():
                 raise NotADirectoryError('Template Directory "{}" must be an existing Directory'.format(pizza_cutter_path_template_dir))
+            # make sure it is a pathlib3x object
+            pizza_cutter_path_template_dir = pathlib.Path(pizza_cutter_path_template_dir)
             pizza_cutter_path_template_dir = pizza_cutter_path_template_dir.resolve()
 
         if pizza_cutter_path_target_dir is None:
             pizza_cutter_path_target_dir = pathlib.Path.cwd().resolve()
+        else:
+            # make sure it is a pathlib3x object
+            pizza_cutter_path_target_dir = pathlib.Path(pizza_cutter_path_target_dir)
 
         self.pizza_cutter_path_conf_file = pizza_cutter_path_conf_file
         self.pizza_cutter_path_template_dir = pizza_cutter_path_template_dir
@@ -43,7 +50,7 @@ class PizzaCutterConfigBase(object):
         self.pizza_cutter_quiet = False
 
         # for patterns to look out after all replacements, in order to find unfilled patterns
-        self.pizzacutter_pattern_prefixes = ['{{PizzaCutter.', '{{cookiecutter.']
+        self.pizzacutter_pattern_prefixes = ['{{PizzaCutter', '{{cookiecutter', '{{pizzacutter', '{{Pizzacutter']
 
         # ######################################################################################################################################################
         # replacement patterns

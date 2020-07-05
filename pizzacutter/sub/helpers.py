@@ -1,5 +1,6 @@
 # STDLIB
 import pathlib3x as pathlib
+from typing import Iterable, Union
 
 
 def path_startswith(path_object_to_test: pathlib.Path, path_object: pathlib.Path) -> bool:
@@ -22,12 +23,24 @@ def path_startswith(path_object_to_test: pathlib.Path, path_object: pathlib.Path
     >>> test_folder2 =  pathlib.Path('/test2/test1')
 
     """
-    return bool(path_object_to_test.resolve().is_relative_to(str(path_object.resolve())))
+    return bool(path_object_to_test.resolve().is_relative_to(path_object.resolve()))
 
 
-def create_target_directory(path_target_file_object: pathlib.Path) -> None:
+def findall(pattern: Union[str, bytes], text: Union[str, bytes]) -> Iterable[int]:
     """
-    if not path_target_file_object.is_dir():
-        path_target_file_object = path_target_file_object.parent
+    Yields all the positions of the pattern in the text
+
+    >>> list(findall('{{test}}', 'my{{test}}{{test}}'))
+    [2, 10]
+    >>> list(findall('{{text}}', 'my{{test}}{{test}}'))
+    []
+    >>> list(findall('{{test}}'.encode(), 'my{{test}}{{test}}'.encode()))
+    [2, 10]
+    >>> list(findall('{{test}}'.encode(), 'my{{test}}\\n{{test}}'.encode()))
+    [2, 11]
+
     """
-    path_target_file_object.mkdir(parents=True, exist_ok=True)
+    i = text.find(pattern)                  # type: ignore
+    while i != -1:
+        yield i
+        i = text.find(pattern, i + 1)       # type: ignore
