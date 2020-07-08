@@ -126,6 +126,9 @@ class PizzaCutterConfigBase(object):
         # ######################################################################################################################################################
 
         self.pizza_cutter_patterns: Dict[str, Union[str, pathlib.Path]] = dict()
+        # this is useful in scripts, to detect if cutting already happened
+        # for instance bash:  if [[ "{{PizzaCutter.True}}" == "True" ]]; then ...
+        self.pizza_cutter_patterns['{{PizzaCutter.True}}'] = 'True'
 
         # ######################################################################################################################################################
         # cutter_options
