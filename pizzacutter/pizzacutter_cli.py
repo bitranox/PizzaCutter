@@ -67,9 +67,9 @@ def cli_main() -> None:             # pragma: no cover
 
 
 @cli_main.command('info', context_settings=CLICK_CONTEXT_SETTINGS)
-def cli_info() -> None:             # pragma: no cover
+def cli_info() -> None:
     """ get program informations """
-    info()                          # pragma: no cover
+    info()
 
 
 @cli_main.command('build', context_settings=CLICK_CONTEXT_SETTINGS)
@@ -89,7 +89,7 @@ def cli_build(conf_file: str, template_dir: str = '', target_dir: str = '',
           target_dir=target_dir,
           dry_run=dry_run,
           overwrite=overwrite,
-          write_outside=write_outside)  # pragma: no cover
+          write_outside=write_outside)
 
 
 # entry point if main
