@@ -7,7 +7,7 @@ Changelog
 
 0.1.2
 -----
-2020-07-16: Development Version
+2020-xx-xx: Development Version
     -
 
 0.1.1
