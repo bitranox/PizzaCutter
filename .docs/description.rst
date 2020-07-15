@@ -148,8 +148,16 @@ This is where the flexibility starts - You can dynamically calculate and assign 
 So easy, so effective, just use python for Your config.
 
 
-
 PizzaCutter is created and maintained with PizzaCutter !
+
+not happy with an default template ?
+====================================
+if you want to change some parts of a template, there is no need that You modify the default template.
+(actually that would be a bad practice).
+
+Just create another "subclassed" template and overwrite or delete files which were created by the default template You selected.
+By that way, You can always inherit from the (evolving) default template, without being forced to populate
+Your changes every time the default template is changed (or to become stuck with your modified template)
 
 why not cookiecutter ?
 ======================
@@ -157,8 +165,6 @@ cookiecutter is nice, dont get me wrong, and its out there for a long time - so 
 documentation, support and user base,  which we dont have.
 At the first glance, cookiecutter looks easy, but if You want to do more advanced tasks, its getting complicated - and we really see no sense to write code in
 jinja templates with the limitations that come with that. An XML config file was simply not enough for us.
-
-
 
 features of the demo python template:
 =====================================
@@ -169,12 +175,13 @@ features of the demo python template:
 - for projects which are set up this way, the config files can be edited any time and the projects can be updated with one keypress.
 - a shell script for local continuous testing, see ".../tests/local_testscripts/run_testloop.sh"
 - a shell script to clean the project from all caches, eggs, dist and build directories, see ".../tests/local_testscripts/run_clean.sh"
-- a shell script to create Your secrets for Travis, see ".../travis_secrets/create_secrets.sh
+- a shell script to create Your secrets (encrypted environment variables) for Travis, see ".../travis_secrets/create_secrets.sh
 
 TODO
 ====
 
-- function to convert or to use CookieCutter Projects - it should be really easy
+- PizzaCutter.options for delete files, directories, empty directories for easier template subclassing (though that can be done in the config files)
+- function to convert or to use CookieCutter Projects - that should be easy
 - maybe provide a small function for interactive settings like cookiecutter
 - converting some interesting cookiecutter templates into PizzaCutter Templates
 - github support (if someone needs it, we are fine at the moment with locally downloaded templates) - its easy to do, give us a note if You need it.

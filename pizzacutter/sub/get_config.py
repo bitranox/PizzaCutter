@@ -27,6 +27,8 @@ class PizzaCutterGetConfig(object):
                  # the target path of the Project Folder - this should be the current Directory - can be overridden by conf file
                  pizza_cutter_path_target_dir: Optional[pathlib.Path] = None):
 
+        # make sure it is a pathlib3x instance
+        pizza_cutter_path_conf_file = pathlib.Path(pizza_cutter_path_conf_file)
         self.conf = pizzacutter_config.PizzaCutterConfigBase()
         reloaded_mod_conf = import_module.import_module_from_file(module_fullpath=pizza_cutter_path_conf_file, reload=True)
         self.conf = reloaded_mod_conf.PizzaCutterConfig(pizza_cutter_path_conf_file=pizza_cutter_path_conf_file,

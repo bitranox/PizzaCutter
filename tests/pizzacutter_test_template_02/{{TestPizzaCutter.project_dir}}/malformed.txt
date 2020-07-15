@@ -1,0 +1,5 @@
+some text
+missing closing bracket : {{TestPizzaCutter.missing_brackets}
+unfilled Pattern : {{TestPizzaCutter.unfilled_pattern}}
+some more text
+

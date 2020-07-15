@@ -12,13 +12,12 @@ PizzaCutter
 .. |license| image:: https://img.shields.io/github/license/webcomics/pywine.svg
    :target: http://en.wikipedia.org/wiki/MIT_License
 
-.. |jupyter| image:: https://mybinder.org/badge.svg
-   :target: https://mybinder.org/v2/gh/bitranox/PizzaCutter/master?filepath=jupyter_test_PizzaCutter.ipynb
+.. |jupyter| image:: https://mybinder.org/badge_logo.svg
+ :target: https://mybinder.org/v2/gh/bitranox/PizzaCutter/master?filepath=PizzaCutter.ipynb
 
 .. for the pypi status link note the dashes, not the underscore !
 .. |pypi| image:: https://img.shields.io/pypi/status/PizzaCutter?label=PyPI%20Package
    :target: https://badge.fury.io/py/PizzaCutter
-
 
 .. |codecov| image:: https://img.shields.io/codecov/c/github/bitranox/PizzaCutter
    :target: https://codecov.io/gh/bitranox/PizzaCutter
@@ -191,8 +190,16 @@ This is where the flexibility starts - You can dynamically calculate and assign 
 So easy, so effective, just use python for Your config.
 
 
-
 PizzaCutter is created and maintained with PizzaCutter !
+
+not happy with an default template ?
+====================================
+if you want to change some parts of a template, there is no need that You modify the default template.
+(actually that would be a bad practice).
+
+Just create another "subclassed" template and overwrite or delete files which were created by the default template You selected.
+By that way, You can always inherit from the (evolving) default template, without being forced to populate
+Your changes every time the default template is changed (or to become stuck with your modified template)
 
 why not cookiecutter ?
 ======================
@@ -200,8 +207,6 @@ cookiecutter is nice, dont get me wrong, and its out there for a long time - so 
 documentation, support and user base,  which we dont have.
 At the first glance, cookiecutter looks easy, but if You want to do more advanced tasks, its getting complicated - and we really see no sense to write code in
 jinja templates with the limitations that come with that. An XML config file was simply not enough for us.
-
-
 
 features of the demo python template:
 =====================================
@@ -212,12 +217,13 @@ features of the demo python template:
 - for projects which are set up this way, the config files can be edited any time and the projects can be updated with one keypress.
 - a shell script for local continuous testing, see ".../tests/local_testscripts/run_testloop.sh"
 - a shell script to clean the project from all caches, eggs, dist and build directories, see ".../tests/local_testscripts/run_clean.sh"
-- a shell script to create Your secrets for Travis, see ".../travis_secrets/create_secrets.sh
+- a shell script to create Your secrets (encrypted environment variables) for Travis, see ".../travis_secrets/create_secrets.sh
 
 TODO
 ====
 
-- function to convert or to use CookieCutter Projects - it should be really easy
+- PizzaCutter.options for delete files, directories, empty directories for easier template subclassing (though that can be done in the config files)
+- function to convert or to use CookieCutter Projects - that should be easy
 - maybe provide a small function for interactive settings like cookiecutter
 - converting some interesting cookiecutter templates into PizzaCutter Templates
 - github support (if someone needs it, we are fine at the moment with locally downloaded templates) - its easy to do, give us a note if You need it.
@@ -380,8 +386,9 @@ Usage from Commandline
      create and update projects from project templates
 
    Options:
-     --version   Show the version and exit.
-     -h, --help  Show this message and exit.
+     --version                     Show the version and exit.
+     --traceback / --no-traceback  return traceback information on cli
+     -h, --help                    Show this message and exit.
 
    Commands:
      build  build or rebuild from CONF_FILE
@@ -421,6 +428,12 @@ Changelog
 - new MAJOR version for incompatible API changes,
 - new MINOR version for added functionality in a backwards compatible manner
 - new PATCH version for backwards compatible bug fixes
+
+0.1.1
+-----
+2020-07-16: Patch release
+    - fix cli test
+    - enable traceback option on cli errors
 
 0.1.0
 -----

@@ -9,13 +9,12 @@
 .. |license| image:: https://img.shields.io/github/license/webcomics/pywine.svg
    :target: http://en.wikipedia.org/wiki/MIT_License
 
-.. |jupyter| image:: https://mybinder.org/badge.svg
-   :target: https://mybinder.org/v2/gh/bitranox/PizzaCutter/master?filepath=jupyter_test_PizzaCutter.ipynb
+.. |jupyter| image:: https://mybinder.org/badge_logo.svg
+ :target: https://mybinder.org/v2/gh/bitranox/PizzaCutter/master?filepath=PizzaCutter.ipynb
 
 .. for the pypi status link note the dashes, not the underscore !
 .. |pypi| image:: https://img.shields.io/pypi/status/PizzaCutter?label=PyPI%20Package
    :target: https://badge.fury.io/py/PizzaCutter
-
 
 .. |codecov| image:: https://img.shields.io/codecov/c/github/bitranox/PizzaCutter
    :target: https://codecov.io/gh/bitranox/PizzaCutter
