@@ -1,5 +1,7 @@
 # STDLIB
 import pathlib3x as pathlib
+import sys
+from typing import Optional
 
 # EXT
 import click
@@ -9,10 +11,12 @@ CLICK_CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
 try:
     from . import __init__conf__
+    from . import cli_exit_tools
     from . import pizzacutter
 except (ImportError, ModuleNotFoundError):  # pragma: no cover
     # imports for pytest
     import __init__conf__                   # type: ignore  # pragma: no cover
+    import cli_exit_tools                   # type: ignore  # pragma: no cover
     import pizzacutter                      # type: ignore  # pragma: no cover
 
 
@@ -62,8 +66,10 @@ def build(conf_file: str, template_dir: str = '', target_dir: str = '', dry_run:
 @click.version_option(version=__init__conf__.version,
                       prog_name=__init__conf__.shell_command,
                       message='{} version %(version)s'.format(__init__conf__.shell_command))
-def cli_main() -> None:             # pragma: no cover
-    pass
+@click.option('--traceback/--no-traceback', is_flag=True, type=bool, default=None, help='return traceback information on cli')
+def cli_main(traceback: Optional[bool] = None) -> None:
+    if traceback is not None:
+        cli_exit_tools.config.traceback = traceback
 
 
 @cli_main.command('info', context_settings=CLICK_CONTEXT_SETTINGS)
@@ -94,4 +100,8 @@ def cli_build(conf_file: str, template_dir: str = '', target_dir: str = '',
 
 # entry point if main
 if __name__ == '__main__':
-    cli_main()
+    try:
+        cli_main()
+    except Exception as exc:
+        cli_exit_tools.print_exception_message()
+        sys.exit(cli_exit_tools.get_system_exit_code(exc))
