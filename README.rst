@@ -432,7 +432,8 @@ Changelog
 
 0.1.3
 -----
-development
+2020-07-16: feature release
+    - change the location of the python default template
 
 0.1.2
 -----
