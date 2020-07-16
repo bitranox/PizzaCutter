@@ -429,6 +429,11 @@ Changelog
 - new MINOR version for added functionality in a backwards compatible manner
 - new PATCH version for backwards compatible bug fixes
 
+0.1.2
+-----
+2020-07-16: PyPi Release
+    - release on pypi
+
 0.1.1
 -----
 2020-07-16: Patch release
