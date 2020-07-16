@@ -4,7 +4,7 @@ FUNCTION
 A command-line utility that creates and updates software projects in any language from PizzaCutter project templates.
 
 for the impatient, find here the latest PizzaCutter Templates:
-    - `PizzaCutter default python template <https://github.com/bitranox/pizzacutter_default_python_template>`_
+    - `PizzaCutter default python template <https://github.com/bitranox/pct_python_default>`_
 
 
 It is conceptually similar to `CookieCutter <https://cookiecutter.readthedocs.io>`_ but we want to do more and cut Pizza -
@@ -50,11 +50,11 @@ until now, it just looks like a less mature cookiecutter, doesnt it ? But since 
 not
 do with cookiecutter :
 
-- Though PizzaCutter needs a little more complex `template file <https://github.com/bitranox/pizzacutter_default_python_template>`_ ,
+- Though PizzaCutter needs a little more complex `template file <https://github.com/bitranox/pct_python_default>`_ ,
   at the end You can get as complex as You like.
   Therefore You are not limited with functions or features provided by PizzaCutter, You can add or create yourself special features in the config file.
 - You can (and should) inherit config files from default config files - and just change there the few things You need to change.
-  In the `example <https://github.com/bitranox/pizzacutter_default_python_template>`_ we have decent complex config file for a python project,
+  In the `example <https://github.com/bitranox/pct_python_default>`_ we have decent complex config file for a python project,
   but Your default config should only inherit a small portion from that, and Your project config file should inherit from Your default config -
   it is very convenient.
   By that way a change in Your default config will be inherited by all Your project configs:
