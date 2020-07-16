@@ -5,6 +5,9 @@ Changelog
 - new MINOR version for added functionality in a backwards compatible manner
 - new PATCH version for backwards compatible bug fixes
 
+0.1.4
+-----
+development
 
 0.1.3
 -----
