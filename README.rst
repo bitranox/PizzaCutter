@@ -1,3 +1,7 @@
+Version 0.1.4 as of 2020-07-29, see changelog_
+
+=======================================================
+
 PizzaCutter
 ===========
 
@@ -248,9 +252,9 @@ tested on linux "bionic" with python 3.6, 3.7, 3.8, 3.8-dev, pypy3
 
 ----
 
-- `Installation and Upgrade`_
 - `Usage`_
 - `Usage from Commandline`_
+- `Installation and Upgrade`_
 - `Requirements`_
 - `Acknowledgements`_
 - `Contribute`_
@@ -263,6 +267,47 @@ tested on linux "bionic" with python 3.6, 3.7, 3.8, 3.8-dev, pypy3
 ----
 
 
+
+Usage
+-----------
+
+In order to set up a new project You need to download the template, and edit the configuration file.
+
+You should copy the config from the demo template to a new file and edit as needed.
+
+Then You simply launch the config file - thats all ! (in that case You need to set the target directory in the config file)
+
+Or You might use it like that :
+
+.. code-block:: bash
+
+    $> pizzacutter build <path_to_conf_file.py>
+    $> # or even simpler if the template is prepared for it :
+    $> <path_to_conf_file.py>
+
+
+
+
+My preferred usage is, to use one template folder, and keep many configs in that folder - by that way I can update all my projects just
+by launching each configuration file.
+
+Usage from Commandline
+------------------------
+
+.. code-block:: bash
+
+   Usage: pizzacutter [OPTIONS] COMMAND [ARGS]...
+
+     create and update projects from project templates
+
+   Options:
+     --version                     Show the version and exit.
+     --traceback / --no-traceback  return traceback information on cli
+     -h, --help                    Show this message and exit.
+
+   Commands:
+     build  build or rebuild from CONF_FILE
+     info   get program informations
 
 Installation and Upgrade
 ------------------------
@@ -353,47 +398,6 @@ Installation and Upgrade
     # uninstall the package
     $ make uninstall
 
-Usage
------------
-
-In order to set up a new project You need to download the template, and edit the configuration file.
-
-You should copy the config from the demo template to a new file and edit as needed.
-
-Then You simply launch the config file - thats all ! (in that case You need to set the target directory in the config file)
-
-Or You might use it like that :
-
-.. code-block:: bash
-
-    $> pizzacutter build <path_to_conf_file.py>
-    $> # or even simpler if the template is prepared for it :
-    $> <path_to_conf_file.py>
-
-
-
-
-My preferred usage is, to use one template folder, and keep many configs in that folder - by that way I can update all my projects just
-by launching each configuration file.
-
-Usage from Commandline
-------------------------
-
-.. code-block:: bash
-
-   Usage: pizzacutter [OPTIONS] COMMAND [ARGS]...
-
-     create and update projects from project templates
-
-   Options:
-     --version                     Show the version and exit.
-     --traceback / --no-traceback  return traceback information on cli
-     -h, --help                    Show this message and exit.
-
-   Commands:
-     build  build or rebuild from CONF_FILE
-     info   get program informations
-
 Requirements
 ------------
 following modules will be automatically installed :
@@ -402,6 +406,7 @@ following modules will be automatically installed :
 
     ## Project Requirements
     click
+    cli_exit_tools @ git+https://github.com/bitranox/cli_exit_tools.git
     pathlib3x @ git+https://github.com/bitranox/pathlib3x.git
 
 Acknowledgements
@@ -431,7 +436,10 @@ Changelog
 
 0.1.4
 -----
-development
+2020-07-29: feature release
+    - use the new pizzacutter template
+    - use cli_exit_tools
+
 
 0.1.3
 -----
