@@ -1,4 +1,4 @@
-Version 0.1.4 as of 2020-07-29, see changelog_
+Version 0.1.5a0 as of 2020-07-29, see changelog_
 
 =======================================================
 
@@ -434,12 +434,16 @@ Changelog
 - new MINOR version for added functionality in a backwards compatible manner
 - new PATCH version for backwards compatible bug fixes
 
+0.1.5a0
+-------
+2020-07-29: development
+
+
 0.1.4
 -----
 2020-07-29: feature release
     - use the new pizzacutter template
     - use cli_exit_tools
-
 
 0.1.3
 -----
