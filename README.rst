@@ -1,4 +1,4 @@
-Version 0.1.5a0 as of 2020-07-29, see changelog_
+Version 0.1.5 as of 2020-07-30, see changelog_
 
 =======================================================
 
@@ -291,6 +291,53 @@ Or You might use it like that :
 My preferred usage is, to use one template folder, and keep many configs in that folder - by that way I can update all my projects just
 by launching each configuration file.
 
+
+HELPERS
+=======
+
+- find version number in CHANGES.rst
+
+.. code-block:: python
+
+    def find_version_number_in_file(path_txt_file: pathlib.Path) -> str:
+        """
+        this function can be used in the PizzaCutter Template to extrect the Version Numer
+        from a text file (usually CHANGES.rst)
+
+        it finds the first line in a file, where the first non-blank character is a digit.
+        the whole string (until ':' or EOL) is returned.
+
+        if the version number or the file can not be found, Version '0.0.1a0' will be returned
+        and a warning will be logged
+
+
+        Parameter
+        ---------
+        path_txt_file
+            the text file to search for
+
+        Examples
+        --------
+        File content:
+
+            some
+            text
+            1.2.3a0:
+
+        Output :
+            1.2.3a0
+
+
+        >>> path_test_dir = pathlib.Path(__file__).parent.parent.parent.resolve() / 'tests'
+        >>> path_test_file = path_test_dir / 'test_find_version_number_in_file.txt'
+        >>> path_test_file_no_version = path_test_dir / 'test_find_version_number_in_file_no_version.txt'
+        >>> path_test_file_not_existing = path_test_dir / 'non_existing_file.txt'
+        >>> assert find_version_number_in_file(path_test_file) == '1.2.3a4'
+        >>> assert find_version_number_in_file(path_test_file_no_version) == '0.0.1a0'
+        >>> assert find_version_number_in_file(path_test_file_not_existing) == '0.0.1a0'
+
+        """
+
 Usage from Commandline
 ------------------------
 
@@ -434,30 +481,30 @@ Changelog
 - new MINOR version for added functionality in a backwards compatible manner
 - new PATCH version for backwards compatible bug fixes
 
-0.1.5a0
+0.1.5
 -------
-2020-07-29: development
-
+2020-07-30: release
+    - add helper "find_version_number_in_file"
 
 0.1.4
 -----
-2020-07-29: feature release
+2020-07-29: release
     - use the new pizzacutter template
     - use cli_exit_tools
 
 0.1.3
 -----
-2020-07-16: feature release
+2020-07-16: release
     - change the location of the python default template
 
 0.1.2
 -----
-2020-07-16: PyPi Release
+2020-07-16: release
     - release on pypi
 
 0.1.1
 -----
-2020-07-16: Patch release
+2020-07-16: release
     - fix cli test
     - enable traceback option on cli errors
 
