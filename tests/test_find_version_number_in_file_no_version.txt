@@ -1,0 +1,11 @@
+test file for function helpers/find_version_number_in_file
+
+this is used to extract the version number from the CHANGES.rst locally,
+so You dont need to set the version number in the PizzaCutter config file every time.
+Thats much more conveniant.
+
+the first line starting with a digit will be returned, until EOL or ':'
+
+if no line is found, the version number 0.0.1a0 will be returned.
+
+this file will return '0.0.1a0'

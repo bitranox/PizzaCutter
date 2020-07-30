@@ -2,7 +2,6 @@
 import logging
 import os
 import pprint
-import shutil
 from typing import List, Optional, Union, BinaryIO
 
 # OWN

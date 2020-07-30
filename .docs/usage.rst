@@ -17,3 +17,15 @@ Or You might use it like that :
 
 My preferred usage is, to use one template folder, and keep many configs in that folder - by that way I can update all my projects just
 by launching each configuration file.
+
+
+HELPERS
+=======
+
+- find version number in CHANGES.rst
+
+.. include:: ../pizzacutter/sub/helpers.py
+    :code: python
+    :start-after: # find_version_number_in_file{{{
+    :end-before: # find_version_number_in_file}}}
+
