@@ -1,4 +1,4 @@
-Version 0.1.6a0 as of 2020-07-30, see changelog_
+Version v1.1.6 as of 2020-07-31, see changelog_
 
 =======================================================
 
@@ -304,10 +304,10 @@ HELPERS
         this function can be used in the PizzaCutter Template to extrect the Version Numer
         from a text file (usually CHANGES.rst)
 
-        it finds the first line in a file, where the first non-blank character is a digit.
+        it finds the first line in a file, where the first non-blank character is a digit or v<digit>.
         the whole string (until ':' or EOL) is returned.
 
-        if the version number or the file can not be found, Version '0.0.1a0' will be returned
+        if the version number or the file can not be found, Version 'v0.0.1a0' will be returned
         and a warning will be logged
 
 
@@ -322,10 +322,10 @@ HELPERS
 
             some
             text
-            1.2.3a0:
+            1.2.3a0:  # or v1.2.3a0
 
         Output :
-            1.2.3a0
+            1.2.3a0  # or v1.2.3a0
 
 
         >>> path_test_dir = pathlib.Path(__file__).parent.parent.parent.resolve() / 'tests'
@@ -333,8 +333,8 @@ HELPERS
         >>> path_test_file_no_version = path_test_dir / 'test_find_version_number_in_file_no_version.txt'
         >>> path_test_file_not_existing = path_test_dir / 'non_existing_file.txt'
         >>> assert find_version_number_in_file(path_test_file) == '1.2.3a4'
-        >>> assert find_version_number_in_file(path_test_file_no_version) == '0.0.1a0'
-        >>> assert find_version_number_in_file(path_test_file_not_existing) == '0.0.1a0'
+        >>> assert find_version_number_in_file(path_test_file_no_version) == 'v0.0.1a0'
+        >>> assert find_version_number_in_file(path_test_file_not_existing) == 'v0.0.1a0'
 
         """
 
@@ -481,39 +481,38 @@ Changelog
 - new MINOR version for added functionality in a backwards compatible manner
 - new PATCH version for backwards compatible bug fixes
 
-0.1.6a0
--------
-2020-07-30: release
-    -
+v1.1.6
+---------
+2020-07-31: fix travis build
 
-0.1.5
--------
+v0.1.5
+---------
 2020-07-30: release
     - add helper "find_version_number_in_file"
 
-0.1.4
------
+v0.1.4
+---------
 2020-07-29: release
     - use the new pizzacutter template
     - use cli_exit_tools
 
-0.1.3
------
+v0.1.3
+---------
 2020-07-16: release
     - change the location of the python default template
 
-0.1.2
------
+v0.1.2
+---------
 2020-07-16: release
     - release on pypi
 
-0.1.1
------
+v0.1.1
+---------
 2020-07-16: release
     - fix cli test
     - enable traceback option on cli errors
 
-0.1.0
------
+v0.1.0
+---------
 2020-05-24: Initial public release
 
