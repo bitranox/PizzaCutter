@@ -53,10 +53,10 @@ def find_version_number_in_file(path_txt_file: pathlib.Path) -> str:
     this function can be used in the PizzaCutter Template to extrect the Version Numer
     from a text file (usually CHANGES.rst)
 
-    it finds the first line in a file, where the first non-blank character is a digit.
+    it finds the first line in a file, where the first non-blank character is a digit or v<digit>.
     the whole string (until ':' or EOL) is returned.
 
-    if the version number or the file can not be found, Version '0.0.1a0' will be returned
+    if the version number or the file can not be found, Version 'v0.0.1a0' will be returned
     and a warning will be logged
 
 
@@ -71,10 +71,10 @@ def find_version_number_in_file(path_txt_file: pathlib.Path) -> str:
 
         some
         text
-        1.2.3a0:
+        1.2.3a0:  # or v1.2.3a0
 
     Output :
-        1.2.3a0
+        1.2.3a0  # or v1.2.3a0
 
 
     >>> path_test_dir = pathlib.Path(__file__).parent.parent.parent.resolve() / 'tests'
@@ -82,13 +82,13 @@ def find_version_number_in_file(path_txt_file: pathlib.Path) -> str:
     >>> path_test_file_no_version = path_test_dir / 'test_find_version_number_in_file_no_version.txt'
     >>> path_test_file_not_existing = path_test_dir / 'non_existing_file.txt'
     >>> assert find_version_number_in_file(path_test_file) == '1.2.3a4'
-    >>> assert find_version_number_in_file(path_test_file_no_version) == '0.0.1a0'
-    >>> assert find_version_number_in_file(path_test_file_not_existing) == '0.0.1a0'
+    >>> assert find_version_number_in_file(path_test_file_no_version) == 'v0.0.1a0'
+    >>> assert find_version_number_in_file(path_test_file_not_existing) == 'v0.0.1a0'
 
     """
     # find_version_number_in_file}}}
 
-    result = '0.0.1a0'
+    result = 'v0.0.1a0'
     try:
         with open(str(path_txt_file), 'r', encoding='utf-8-sig') as f:
             line = f.readline()
@@ -96,16 +96,19 @@ def find_version_number_in_file(path_txt_file: pathlib.Path) -> str:
                 line = line.strip()
                 try:
                     if line:
-                        int(line[0])
+                        if line[0].lower() == 'v':
+                            int(line[1])
+                        else:
+                            int(line[0])
                         result = line.split(':')[0].strip()
                         break
-                except ValueError:
+                except (ValueError, IndexError):
                     pass
                 line = f.readline()
     except FileNotFoundError:
-        logging.getLogger().warning('no Version number found in "{file}", file not found, assuming Version "0.0.1a0"'.format(file=path_txt_file))
+        logging.getLogger().warning('no Version number found in "{file}", file not found, assuming Version "v0.0.1a0"'.format(file=path_txt_file))
         return result
 
-    if result == '0.0.1a0':
-        logging.getLogger().warning('no Version number found in "{file}", assuming Version "0.0.1a0"'.format(file=path_txt_file))
+    if result == 'v0.0.1a0':
+        logging.getLogger().warning('no Version number found in "{file}", assuming Version "v0.0.1a0"'.format(file=path_txt_file))
     return result
