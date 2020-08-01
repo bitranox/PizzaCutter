@@ -1,9 +1,8 @@
-Version v1.1.6 as of 2020-07-31, see changelog_
-
-=======================================================
-
 PizzaCutter
 ===========
+
+
+Version v1.1.7 as of 2020-08-01 see `Changelog`_
 
 |travis_build| |license| |pypi|
 
@@ -246,7 +245,7 @@ automated tests, Travis Matrix, Documentation, Badges, etc. are managed with `Pi
 
 Python version required: 3.6.0 or newer
 
-tested on linux "bionic" with python 3.6, 3.7, 3.8, 3.8-dev, pypy3
+tested on linux "bionic" with python 3.6, 3.7, 3.8, 3.8-dev, pypy3 - architectures: amd64, ppc64le, s390x, arm64
 
 `100% code coverage <https://codecov.io/gh/bitranox/PizzaCutter>`_, codestyle checking ,mypy static type checking ,tested under `Linux, macOS, Windows <https://travis-ci.org/bitranox/PizzaCutter>`_, automatic daily builds and monitoring
 
@@ -480,6 +479,10 @@ Changelog
 - new MAJOR version for incompatible API changes,
 - new MINOR version for added functionality in a backwards compatible manner
 - new PATCH version for backwards compatible bug fixes
+
+v1.1.7
+---------
+2020-08-01: fix pypi deploy
 
 v1.1.6
 ---------

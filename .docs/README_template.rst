@@ -1,9 +1,9 @@
-Version v1.1.6 as of 2020-07-31, see changelog_
-
-=======================================================
-
 PizzaCutter
 ===========
+
+
+Version v1.1.7 as of 2020-08-01 see `Changelog`_
+
 
 .. include:: ./badges.rst
 
