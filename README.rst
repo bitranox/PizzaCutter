@@ -1,7 +1,8 @@
 PizzaCutter
 ===========
 
-Version v1.1.7 as of 2020-08-01, see `Changelog`_.
+
+Version v1.1.7 as of 2020-08-01 see `Changelog`_
 
 |travis_build| |license| |pypi|
 
