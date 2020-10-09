@@ -60,7 +60,7 @@ class PizzaCutter(object):
         """
 
         if not path_conf_file.is_file():
-            raise FileNotFoundError('the config file "{}" can not be found'.format(path_conf_file))
+            raise FileNotFoundError(f'the config file "{path_conf_file}" can not be found')
 
         self.conf = get_config.PizzaCutterGetConfig(pizza_cutter_path_conf_file=path_conf_file,
                                                     pizza_cutter_path_template_dir=path_template_dir,
@@ -143,7 +143,7 @@ class PizzaCutter(object):
 
         # this is already preparation when we are able to include the content of other files
         if path_source_file in self.file_stack:                                                                     # pragma: no cover
-            raise RecursionError('Recursion on path includes : \n {}'.format(pprint.pformat(self.file_stack)))      # pragma: no cover
+            raise RecursionError(f'Recursion on path includes : \n {pprint.pformat(self.file_stack)}')              # pragma: no cover
         self.file_stack.append(path_source_file)
 
         # this is in preparation for the function if we can include the content of files into other files
@@ -259,9 +259,8 @@ class PizzaCutter(object):
 
     def resolve_str_patterns_recursive(self, pattern: str) -> str:
         if pattern in self.pattern_stack:
-            raise RecursionError('"{last_entry}" refers back to "{pattern}"\n\nStack:\n{stack}'.format(stack=pprint.pformat(self.pattern_stack),
-                                                                                                       last_entry=self.pattern_stack[-1],
-                                                                                                       pattern=pattern))
+            raise RecursionError(f'"{self.pattern_stack[-1]}" refers back to "{pattern}"\n\nStack:\n{pprint.pformat(self.pattern_stack)}')
+
         self.pattern_stack.append(pattern)
 
         replacement = str(self.conf.pizza_cutter_patterns[pattern])
@@ -408,10 +407,10 @@ class PizzaCutter(object):
 
         if self.allow_outside_write:
             if self.dry_run:
-                logger.info('object outside project directory: "{}"'.format(path_target_object))
+                logger.info(f'object outside project directory: "{path_target_object}"')
             skip_outside_write = False
         else:
-            msg = 'object outside project directory not allowed: "{}"'.format(path_target_object)
+            msg = f'object outside project directory not allowed: "{path_target_object}"'
             if self.dry_run:
                 logger.info(msg)
             else:
@@ -430,11 +429,11 @@ class PizzaCutter(object):
         if path_target_object.exists():
             if self.allow_overwrite:
                 if self.dry_run:
-                    logger.debug('object will be overwritten: "{}"'.format(path_target_object))
+                    logger.debug(f'object will be overwritten: "{path_target_object}"')
                 return False
             else:
                 if self.dry_run:
-                    logger.debug('object overwrite skipped, because allow_overwrite = False: "{}"'.format(path_target_object))
+                    logger.debug(f'object overwrite skipped, because allow_overwrite = False: "{path_target_object}"')
                 return True
         else:
             return False
@@ -493,13 +492,13 @@ class PizzaCutter(object):
                 for position in helpers.findall(pattern_prefix, str_path):
                     current_slice = str_path[position: position + max_pattern_length]
                     if '}}' not in current_slice:
-                        l_patterns.append('missing closing brackets for "{}"'.format(pattern_prefix))
+                        l_patterns.append(f'missing closing brackets for "{pattern_prefix}"')
                     else:
                         full_pattern = current_slice.split('}}', 1)[0] + '}}'
-                        l_patterns.append('unfilled pattern "{}"'.format(full_pattern))
+                        l_patterns.append(f'unfilled pattern "{full_pattern}"')
                 if l_patterns:
                     patterns = '\n'.join(l_patterns)
-                    logger.warning('unfilled or malformed patterns in filename "{str_path}": \n{patterns}'.format(str_path=str_path, patterns=patterns))
+                    logger.warning(f'unfilled or malformed patterns in filename "{str_path}": \n{patterns}')
         return l_patterns
 
     def log_unfilled_pattern_in_object(self, path_object: pathlib.Path) -> List[str]:
@@ -541,7 +540,7 @@ class PizzaCutter(object):
                         l_patterns.append('unfilled pattern "{}"'.format(full_pattern_bytes.decode('utf-8')))
             if l_patterns:
                 patterns = '\n'.join(l_patterns)
-                logger.warning('unfilled or malformed patterns in file "{path_object}": \n{patterns}'.format(path_object=path_object, patterns=patterns))
+                logger.warning(f'unfilled or malformed patterns in file "{path_object}": \n{patterns}')
         return l_patterns
 
     def path_remove_cutter_option_patterns(self, path_source_file: pathlib.Path) -> pathlib.Path:
@@ -582,7 +581,7 @@ class PizzaCutter(object):
             for option_pattern in self.conf.pizza_cutter_options.values():
                 source_file_part = source_file_part.replace(option_pattern, '')
             if not source_file_part:
-                raise RuntimeError('No part of the path must consist ONLY of option patterns: "{}"'.format(path_source_file))
+                raise RuntimeError(f'No part of the path must consist ONLY of option patterns: "{path_source_file}"')
             result_file_parts.append(source_file_part)
         result_path_source_file = pathlib.Path(*result_file_parts)
         return result_path_source_file
@@ -717,15 +716,14 @@ class PizzaCutter(object):
                 if pattern in source_object_part:
                     if source_object_part != pattern:
                         raise RuntimeError(
-                            'pathlib.Path patterns can only be one complete part of a path : Path: "{path_source_file}", Pattern: {pattern}'.format(
-                                path_source_file=path_source_path, pattern=pattern))
+                            f'pathlib.Path patterns can only be one complete part of a path : Path: "{path_source_path}", Pattern: {pattern}'
+                            )
                     else:
                         target_object_part = pathlib.Path(replacement)
                         if target_object_part.is_absolute() and absolute_path_found:
                             logger.warning(
                                 'the resulting path might be unexpected, You have more then one absolute pathlib.Path pattern in the path: '
-                                '"{path_source_file}", Pattern: "{pattern}" points to "{replacement}"'.format(
-                                    path_source_file=path_source_path, pattern=pattern, replacement=replacement))
+                                f'"{path_source_path}", Pattern: "{pattern}" points to "{replacement}"')
 
             if not absolute_path_found:
                 target_parts.append(target_object_part)
@@ -738,8 +736,7 @@ class PizzaCutter(object):
         if absolute_path_found:
             if not self.quiet:
                 logger.warning('the resulting path of a template file might be unexpected, You have an absolute pathlib.Path pattern in the path: '
-                               '"{path_source_path}" points to "{path_target_path}"'.format(path_source_path=path_source_path,
-                                                                                            path_target_path=path_target_path))
+                               f'"{path_source_path}" points to "{path_target_path}"')
         else:
             path_target_path = path_target_path.replace_parts(self.path_template_dir.resolve(), self.path_target_dir.resolve())
         return path_target_path
