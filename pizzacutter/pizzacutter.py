@@ -534,10 +534,10 @@ class PizzaCutter(object):
                     current_slice = content_bytes[position: position + max_pattern_length].split(b'\n', 1)[0]
                     if b'}}' not in current_slice:
                         current_slice = b'{{' + current_slice[2:].split(b'{{', 1)[0].split(b'}', 1)[0]
-                        l_patterns.append('missing closing brackets for "{}"'.format(current_slice.decode('utf-8')))
+                        l_patterns.append(f'missing closing brackets for "{current_slice.decode("utf-8")}"')
                     else:
                         full_pattern_bytes = current_slice.split(b'}}', 1)[0] + b'}}'
-                        l_patterns.append('unfilled pattern "{}"'.format(full_pattern_bytes.decode('utf-8')))
+                        l_patterns.append(f'unfilled pattern "{full_pattern_bytes.decode("utf-8")}"')
             if l_patterns:
                 patterns = '\n'.join(l_patterns)
                 logger.warning(f'unfilled or malformed patterns in file "{path_object}": \n{patterns}')

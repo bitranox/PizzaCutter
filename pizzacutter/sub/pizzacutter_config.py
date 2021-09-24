@@ -34,7 +34,7 @@ class PizzaCutterConfigBase(object):
             pizza_cutter_path_conf_file = pathlib.Path(__file__).resolve()
         else:
             if not pizza_cutter_path_conf_file.is_file():
-                raise FileNotFoundError('PizzaCutter config file "{}" does not exist'.format(pizza_cutter_path_conf_file))
+                raise FileNotFoundError(f'PizzaCutter config file "{pizza_cutter_path_conf_file}" does not exist')
             # make sure it is a pathlib3x object
             pizza_cutter_path_conf_file = pathlib.Path(pizza_cutter_path_conf_file)
             pizza_cutter_path_conf_file = pizza_cutter_path_conf_file.resolve()
@@ -43,7 +43,7 @@ class PizzaCutterConfigBase(object):
             pizza_cutter_path_template_dir = pizza_cutter_path_conf_file.resolve().parent
         else:
             if not pizza_cutter_path_template_dir.is_dir():
-                raise NotADirectoryError('Template Directory "{}" must be an existing Directory'.format(pizza_cutter_path_template_dir))
+                raise NotADirectoryError(f'Template Directory "{pizza_cutter_path_template_dir}" must be an existing Directory')
             # make sure it is a pathlib3x object
             pizza_cutter_path_template_dir = pathlib.Path(pizza_cutter_path_template_dir)
             pizza_cutter_path_template_dir = pizza_cutter_path_template_dir.resolve()

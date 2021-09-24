@@ -25,10 +25,10 @@ def pizza_cutter_instance():
     yield pizza_cutter  # provide the fixture value
     # teardown code
     if not path_target_dir.is_relative_to(path_test_dir):
-        raise RuntimeError('attempt to delete "{}" which is outside the test dir "{}"'.format(pizza_cutter_instance.path_target_dir, path_test_dir))
+        raise RuntimeError(f'attempt to delete "{pizza_cutter_instance.path_target_dir}" which is outside the test dir "{path_test_dir}"')
 
     if not path_target_dir.is_relative_to(path_test_dir):
-        raise RuntimeError('attempt to delete "{}" which is outside the test dir "{}"'.format(path_outside_target_dir, path_test_dir))
+        raise RuntimeError(f'attempt to delete "{path_outside_target_dir}" which is outside the test dir "{path_test_dir}"')
 
     shutil.rmtree(path_target_dir, ignore_errors=True)
     shutil.rmtree(path_outside_target_dir, ignore_errors=True)

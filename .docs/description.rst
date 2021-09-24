@@ -38,7 +38,7 @@ Its cookiecutter on steroids.
 
 .. code-block:: bash
 
-   {{\PizzaCutter.repo_name}}/{{\PizzaCutter.repo_name}}/{{\PizzaCutter.repo_name}}.py
+   {{\\PizzaCutter.repo_name}}/{{\\PizzaCutter.repo_name}}/{{\\PizzaCutter.repo_name}}.py
 
 - Supports unlimited levels of directory nesting. (beware of possible path length limitations, especially on Travis Windows builds)
 - 100% of templating is done with just (bytes) replace function. No Jinja2.
@@ -121,14 +121,14 @@ do with cookiecutter :
 
     # User Section - do whatever You want here
     # Pizza Cutter Configuration, can override by cli options.
-    # You might name Your Patterns as You like {{\PizzaCutter. ... }}, {{LemonCutter. ... }}, {{MelonCutter. ... }}
-            self.pizza_cutter_patterns['{{\PizzaCutter.full_name}}'] = 'Robert Nowotny'
-            self.pizza_cutter_patterns['{{\PizzaCutter.email}}'] = 'bitranox@gmail.com'
-            self.pizza_cutter_patterns['{{\PizzaCutter.project.name}}'] = 'Complexity'
-            self.pizza_cutter_patterns['{{\PizzaCutter.project_short_description}}'] = 'Refreshingly simple static site generator.'
-            self.pizza_cutter_patterns['{{\PizzaCutter.release_date}}'] = '2013-07-10'
-            self.pizza_cutter_patterns['{{\PizzaCutter.year}}'] = '2013'
-            self.pizza_cutter_patterns['{{\PizzaCutter.current_version}}'] = '0.1.1'
+    # You might name Your Patterns as You like {{\\PizzaCutter. ... }}, {{LemonCutter. ... }}, {{MelonCutter. ... }}
+            self.pizza_cutter_patterns['{{\\PizzaCutter.full_name}}'] = 'Robert Nowotny'
+            self.pizza_cutter_patterns['{{\\PizzaCutter.email}}'] = 'bitranox@gmail.com'
+            self.pizza_cutter_patterns['{{\\PizzaCutter.project.name}}'] = 'Complexity'
+            self.pizza_cutter_patterns['{{\\PizzaCutter.project_short_description}}'] = 'Refreshingly simple static site generator.'
+            self.pizza_cutter_patterns['{{\\PizzaCutter.release_date}}'] = '2013-07-10'
+            self.pizza_cutter_patterns['{{\\PizzaCutter.year}}'] = '2013'
+            self.pizza_cutter_patterns['{{\\PizzaCutter.current_version}}'] = '0.1.1'
 
         self.set_defaults()
         self.set_patterns()
@@ -141,7 +141,7 @@ With Pizzacutter its easy :
 
 .. code-block:: python
 
-            self.pizza_cutter_patterns['{{\PizzaCutter.release_date}}'] = datetime.datetime.strptime(today, '%Y-%m-%d')
+            self.pizza_cutter_patterns['{{\\PizzaCutter.release_date}}'] = datetime.datetime.strptime(today, '%Y-%m-%d')
 
 This is where the flexibility starts - You can dynamically calculate and assign values in the config file.
 

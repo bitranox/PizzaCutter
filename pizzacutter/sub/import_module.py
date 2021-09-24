@@ -37,7 +37,7 @@ def import_module_from_file(module_fullpath: Union[pathlib.Path, str], reload: b
         module_fullpath = pathlib.Path(str(module_fullpath) + '.py')
 
     if not module_fullpath.is_file():
-        raise FileNotFoundError('module "{}" not found'.format(module_fullpath))
+        raise FileNotFoundError(f'module "{module_fullpath}" not found')
 
     module_name = module_fullpath.stem
 
@@ -53,13 +53,13 @@ def import_module_from_file(module_fullpath: Union[pathlib.Path, str], reload: b
     spec = importlib.util.spec_from_file_location(module_name, module_fullpath)
     if spec is None:
         sys.path.pop()
-        raise ImportError('can not get spec from file location "{}"'.format(module_fullpath))
+        raise ImportError(f'can not get spec from file location "{module_fullpath}"')
 
     try:
         mod = importlib.util.module_from_spec(spec)
         sys.modules[module_name] = mod
     except Exception as exc:
-        raise ImportError('can not load module "{}"'.format(module_name)) from exc
+        raise ImportError(f'can not load module "{module_name}"') from exc
     finally:
         sys.path.pop()
         sys.path.append(str(module_fullpath.parent))
@@ -68,6 +68,6 @@ def import_module_from_file(module_fullpath: Union[pathlib.Path, str], reload: b
         spec.loader.exec_module(mod)    # type: ignore
     except Exception as exc:
         sys.path.pop()
-        raise ImportWarning('module "{}" reloaded, but can not be executed'.format(module_name)) from exc
+        raise ImportWarning(f'module "{module_name}" reloaded, but can not be executed') from exc
 
     return mod

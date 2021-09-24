@@ -11,7 +11,7 @@ CLICK_CONTEXT_SETTINGS_NO_HELP: Dict[str, List[str]] = dict(help_option_names=[]
 @click.group(help='some help', context_settings=CLICK_CONTEXT_SETTINGS)
 @click.version_option(version='1.1.1',
                       prog_name='program name',
-                      message='{} version %(version)s'.format('cli command'))
+                      message=f"{'cli command'} version %(version)s")
 def cli_main() -> None:             # pragma: no cover
     pass                            # pragma: no cover
 

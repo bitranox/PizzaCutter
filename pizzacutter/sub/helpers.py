@@ -106,9 +106,9 @@ def find_version_number_in_file(path_txt_file: pathlib.Path) -> str:
                     pass
                 line = f.readline()
     except FileNotFoundError:
-        logging.getLogger().warning('no Version number found in "{file}", file not found, assuming Version "v0.0.1a0"'.format(file=path_txt_file))
+        logging.getLogger().warning(f'no Version number found in "{path_txt_file}", file not found, assuming Version "v0.0.1a0"')
         return result
 
     if result == 'v0.0.1a0':
-        logging.getLogger().warning('no Version number found in "{file}", assuming Version "v0.0.1a0"'.format(file=path_txt_file))
+        logging.getLogger().warning(f'no Version number found in "{path_txt_file}", assuming Version "v0.0.1a0"')
     return result

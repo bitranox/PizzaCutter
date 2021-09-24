@@ -35,7 +35,7 @@ def append_subdirs_to_mypy_paths(root_directory: str) -> str:
     """
     path_root_directory = pathlib.Path(root_directory).resolve()
     if not path_root_directory.is_dir():
-        logger.warning('add mypy paths : the given root directory "{}" does not exist'.format(path_root_directory))
+        logger.warning(f'add mypy paths : the given root directory "{path_root_directory}" does not exist')
         return ''
     l_subdirs = [str(path_root_directory / _dir) for _dir in next(os.walk(path_root_directory))[1]]
     str_current_mypy_paths = get_env_data(env_variable='MYPYPATH')
@@ -69,7 +69,7 @@ def append_directory_to_env_path_variable(env_variable: str, directory: str) -> 
     """
     path_directory = pathlib.Path(directory).resolve()
     if not path_directory.is_dir():
-        logger.warning('can not add to env "{}" : the given directory "{}" does not exist'.format(env_variable, directory))
+        logger.warning(f'can not add to env "{env_variable}" : the given directory "{directory}" does not exist')
         return ''
     l_subdirs = [str(path_directory)]
     str_current_paths = get_env_data(env_variable=env_variable)
