@@ -449,8 +449,8 @@ following modules will be automatically installed :
 
     ## Project Requirements
     click
-    cli_exit_tools @ git+https://github.com/bitranox/cli_exit_tools.git
-    pathlib3x @ git+https://github.com/bitranox/pathlib3x.git
+    cli_exit_tools
+    pathlib3x
 
 Acknowledgements
 ----------------
