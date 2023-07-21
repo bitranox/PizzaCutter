@@ -2,21 +2,25 @@ PizzaCutter
 ===========
 
 
-Version v1.1.9 as of 2020-10-09 see `Changelog`_
+Version v1.1.10 as of 2023-07-21 see `Changelog`_
 
-|travis_build| |license| |pypi|
+|build_badge| |codeql| |license| |pypi|
+|pypi-downloads| |black| |codecov| |cc_maintain| |cc_issues| |cc_coverage| |snyk|
 
-|codecov| |better_code| |cc_maintain| |cc_issues| |cc_coverage| |snyk|
 
 
-.. |travis_build| image:: https://img.shields.io/travis/bitranox/PizzaCutter/master.svg
-   :target: https://travis-ci.org/bitranox/PizzaCutter
+.. |build_badge| image:: https://github.com/bitranox/PizzaCutter/actions/workflows/python-package.yml/badge.svg
+   :target: https://github.com/bitranox/PizzaCutter/actions/workflows/python-package.yml
+
+
+.. |codeql| image:: https://github.com/bitranox/PizzaCutter/actions/workflows/codeql-analysis.yml/badge.svg?event=push
+   :target: https://github.com//bitranox/PizzaCutter/actions/workflows/codeql-analysis.yml
 
 .. |license| image:: https://img.shields.io/github/license/webcomics/pywine.svg
    :target: http://en.wikipedia.org/wiki/MIT_License
 
 .. |jupyter| image:: https://mybinder.org/badge_logo.svg
- :target: https://mybinder.org/v2/gh/bitranox/PizzaCutter/master?filepath=PizzaCutter.ipynb
+   :target: https://mybinder.org/v2/gh/bitranox/PizzaCutter/master?filepath=PizzaCutter.ipynb
 
 .. for the pypi status link note the dashes, not the underscore !
 .. |pypi| image:: https://img.shields.io/pypi/status/PizzaCutter?label=PyPI%20Package
@@ -24,9 +28,6 @@ Version v1.1.9 as of 2020-10-09 see `Changelog`_
 
 .. |codecov| image:: https://img.shields.io/codecov/c/github/bitranox/PizzaCutter
    :target: https://codecov.io/gh/bitranox/PizzaCutter
-
-.. |better_code| image:: https://bettercodehub.com/edge/badge/bitranox/PizzaCutter?branch=master
-   :target: https://bettercodehub.com/results/bitranox/PizzaCutter
 
 .. |cc_maintain| image:: https://img.shields.io/codeclimate/maintainability-percentage/bitranox/PizzaCutter?label=CC%20maintainability
    :target: https://codeclimate.com/github/bitranox/PizzaCutter/maintainability
@@ -40,11 +41,15 @@ Version v1.1.9 as of 2020-10-09 see `Changelog`_
    :target: https://codeclimate.com/github/bitranox/PizzaCutter/test_coverage
    :alt: Code Coverage
 
-.. |snyk| image:: https://img.shields.io/snyk/vulnerabilities/github/bitranox/PizzaCutter
+.. |snyk| image:: https://snyk.io/test/github/bitranox/PizzaCutter/badge.svg
    :target: https://snyk.io/test/github/bitranox/PizzaCutter
 
 .. |black| image:: https://img.shields.io/badge/code%20style-black-000000.svg
    :target: https://github.com/psf/black
+
+.. |pypi-downloads| image:: https://img.shields.io/pypi/dm/PizzaCutter
+   :target: https://pypi.org/project/PizzaCutter/
+   :alt: PyPI - Downloads
 
 FUNCTION
 ========
@@ -86,7 +91,7 @@ Its cookiecutter on steroids.
 
 .. code-block:: bash
 
-   {{PizzaCutter.repo_name}}/{{PizzaCutter.repo_name}}/{{PizzaCutter.repo_name}}.py
+   {{\\PizzaCutter.repo_name}}/{{\\PizzaCutter.repo_name}}/{{\\PizzaCutter.repo_name}}.py
 
 - Supports unlimited levels of directory nesting. (beware of possible path length limitations, especially on Travis Windows builds)
 - 100% of templating is done with just (bytes) replace function. No Jinja2.
@@ -169,14 +174,14 @@ do with cookiecutter :
 
     # User Section - do whatever You want here
     # Pizza Cutter Configuration, can override by cli options.
-    # You might name Your Patterns as You like {{PizzaCutter. ... }}, {{LemonCutter. ... }}, {{MelonCutter. ... }}
-            self.pizza_cutter_patterns['{{PizzaCutter.full_name}}'] = 'Robert Nowotny'
-            self.pizza_cutter_patterns['{{PizzaCutter.email}}'] = 'bitranox@gmail.com'
-            self.pizza_cutter_patterns['{{PizzaCutter.project.name}}'] = 'Complexity'
-            self.pizza_cutter_patterns['{{PizzaCutter.project_short_description}}'] = 'Refreshingly simple static site generator.'
-            self.pizza_cutter_patterns['{{PizzaCutter.release_date}}'] = '2013-07-10'
-            self.pizza_cutter_patterns['{{PizzaCutter.year}}'] = '2013'
-            self.pizza_cutter_patterns['{{PizzaCutter.current_version}}'] = '0.1.1'
+    # You might name Your Patterns as You like {{\\PizzaCutter. ... }}, {{LemonCutter. ... }}, {{MelonCutter. ... }}
+            self.pizza_cutter_patterns['{{\\PizzaCutter.full_name}}'] = 'Robert Nowotny'
+            self.pizza_cutter_patterns['{{\\PizzaCutter.email}}'] = 'bitranox@gmail.com'
+            self.pizza_cutter_patterns['{{\\PizzaCutter.project.name}}'] = 'Complexity'
+            self.pizza_cutter_patterns['{{\\PizzaCutter.project_short_description}}'] = 'Refreshingly simple static site generator.'
+            self.pizza_cutter_patterns['{{\\PizzaCutter.release_date}}'] = '2013-07-10'
+            self.pizza_cutter_patterns['{{\\PizzaCutter.year}}'] = '2013'
+            self.pizza_cutter_patterns['{{\\PizzaCutter.current_version}}'] = '0.1.1'
 
         self.set_defaults()
         self.set_patterns()
@@ -189,7 +194,7 @@ With Pizzacutter its easy :
 
 .. code-block:: python
 
-            self.pizza_cutter_patterns['{{PizzaCutter.release_date}}'] = datetime.datetime.strptime(today, '%Y-%m-%d')
+            self.pizza_cutter_patterns['{{\\PizzaCutter.release_date}}'] = datetime.datetime.strptime(today, '%Y-%m-%d')
 
 This is where the flexibility starts - You can dynamically calculate and assign values in the config file.
 
@@ -243,14 +248,14 @@ Its simple but beautiful. Tell me if You miss anything.
 
 ----
 
-automated tests, Travis Matrix, Documentation, Badges, etc. are managed with `PizzaCutter <https://github
+automated tests, Github Actions, Documentation, Badges, etc. are managed with `PizzaCutter <https://github
 .com/bitranox/PizzaCutter>`_ (cookiecutter on steroids)
 
-Python version required: 3.6.0 or newer
+Python version required: 3.8.0 or newer
 
-tested on linux "bionic" with python 3.6, 3.7, 3.8, 3.9-dev, pypy3 - architectures: amd64, ppc64le, s390x, arm64
+tested on recent linux with python 3.8, 3.9, 3.10, 3.11, 3.12-dev, pypy-3.9, pypy-3.10 - architectures: amd64
 
-`100% code coverage <https://codecov.io/gh/bitranox/PizzaCutter>`_, flake8 style checking ,mypy static type checking ,tested under `Linux, macOS, Windows <https://travis-ci.org/bitranox/PizzaCutter>`_, automatic daily builds and monitoring
+`100% code coverage <https://codeclimate.com/github/bitranox/PizzaCutter/test_coverage>`_, flake8 style checking ,mypy static type checking ,tested under `Linux, macOS, Windows <https://github.com/bitranox/PizzaCutter/actions/workflows/python-package.yml>`_, automatic daily builds and monitoring
 
 ----
 
@@ -343,7 +348,7 @@ HELPERS
 Usage from Commandline
 ------------------------
 
-.. code-block:: bash
+.. code-block::
 
    Usage: pizzacutter [OPTIONS] COMMAND [ARGS]...
 
@@ -364,28 +369,35 @@ Installation and Upgrade
 - Before You start, its highly recommended to update pip and setup tools:
 
 
-.. code-block:: bash
+.. code-block::
 
     python -m pip --upgrade pip
     python -m pip --upgrade setuptools
 
 - to install the latest release from PyPi via pip (recommended):
 
-.. code-block:: bash
+.. code-block::
 
     python -m pip install --upgrade PizzaCutter
+
+
+- to install the latest release from PyPi via pip, including test dependencies:
+
+.. code-block::
+
+    python -m pip install --upgrade PizzaCutter[test]
 
 - to install the latest version from github via pip:
 
 
-.. code-block:: bash
+.. code-block::
 
     python -m pip install --upgrade git+https://github.com/bitranox/PizzaCutter.git
 
 
 - include it into Your requirements.txt:
 
-.. code-block:: bash
+.. code-block::
 
     # Insert following line in Your requirements.txt:
     # for the latest Release on pypi:
@@ -398,14 +410,14 @@ Installation and Upgrade
     python -m pip install --upgrade -r /<path>/requirements.txt
 
 
-- to install the latest development version from source code:
+- to install the latest development version, including test dependencies from source code:
 
-.. code-block:: bash
+.. code-block::
 
     # cd ~
     $ git clone https://github.com/bitranox/PizzaCutter.git
     $ cd PizzaCutter
-    python setup.py install
+    python -m pip install -e .[test]
 
 - via makefile:
   makefiles are a very convenient way to install. Here we can do much more,
@@ -464,6 +476,26 @@ Changelog
 - new MAJOR version for incompatible API changes,
 - new MINOR version for added functionality in a backwards compatible manner
 - new PATCH version for backwards compatible bug fixes
+
+v1.1.10
+--------
+2023-07-21:
+    - require minimum python 3.8
+    - remove python 3.7 tests
+    - introduce PEP517 packaging standard
+    - introduce pyproject.toml build-system
+    - remove mypy.ini
+    - remove pytest.ini
+    - remove setup.cfg
+    - remove setup.py
+    - remove .bettercodehub.yml
+    - remove .travis.yml
+    - update black config
+    - clean ./tests/test_cli.py
+    - add codeql badge
+    - move 3rd_party_stubs outside the src directory to ``./.3rd_party_stubs``
+    - add pypy 3.10 tests
+    - add python 3.12-dev tests
 
 v1.1.9
 --------

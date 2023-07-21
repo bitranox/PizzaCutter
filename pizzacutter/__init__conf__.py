@@ -1,6 +1,8 @@
+# CONF
+
 name = 'pizzacutter'
 title = 'create and update projects from project templates'
-version = 'v1.1.9'
+version = 'v1.1.10'
 url = 'https://github.com/bitranox/PizzaCutter'
 author = 'Robert Nowotny'
 author_email = 'bitranox@gmail.com'
@@ -14,7 +16,7 @@ Info for PizzaCutter:
 
     create and update projects from project templates
 
-    Version : v1.1.9
+    Version : v1.1.10
     Url     : https://github.com/bitranox/PizzaCutter
     Author  : Robert Nowotny
     Email   : bitranox@gmail.com""")

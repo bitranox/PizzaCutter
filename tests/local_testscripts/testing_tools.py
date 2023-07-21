@@ -69,7 +69,7 @@ def append_directory_to_env_path_variable(env_variable: str, directory: str) -> 
     """
     path_directory = pathlib.Path(directory).resolve()
     if not path_directory.is_dir():
-        logger.warning(f'can not add to env "{env_variable}" : the given directory "{directory}" does not exist')
+        logger.warning('can not add to env "{}" : the given directory "{}" does not exist'.format(env_variable, directory))
         return ''
     l_subdirs = [str(path_directory)]
     str_current_paths = get_env_data(env_variable=env_variable)

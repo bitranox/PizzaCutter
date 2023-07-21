@@ -64,7 +64,7 @@ def build(conf_file: str, template_dir: str = '', target_dir: str = '', dry_run:
                       dry_run=dry_run, allow_overwrite=overwrite, allow_outside_write=write_outside)
 
 
-@click.group(help=__init__conf__.title, context_settings=CLICK_CONTEXT_SETTINGS)
+@click.group(help=__init__conf__.title, context_settings=CLICK_CONTEXT_SETTINGS)    # type: ignore
 @click.version_option(version=__init__conf__.version,
                       prog_name=__init__conf__.shell_command,
                       message=f'{__init__conf__.shell_command} version {__init__conf__.version}')
@@ -103,7 +103,7 @@ def cli_build(conf_file: str, template_dir: str = '', target_dir: str = '',
 # entry point if main
 if __name__ == '__main__':
     try:
-        cli_main()
+        cli_main()          # type: ignore
     except Exception as exc:
         cli_exit_tools.print_exception_message()
         sys.exit(cli_exit_tools.get_system_exit_code(exc))
