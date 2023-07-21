@@ -24,7 +24,7 @@ def path_startswith(path_object_to_test: pathlib.Path, path_object: pathlib.Path
     >>> test_folder2 =  pathlib.Path('/test2/test1')
 
     """
-    return bool(path_object_to_test.resolve().is_relative_to(path_object.resolve()))
+    return bool(path_object_to_test.resolve().is_relative_to(path_object.resolve()))    # type: ignore
 
 
 def findall(pattern: Union[str, bytes], text: Union[str, bytes]) -> Iterable[int]:
