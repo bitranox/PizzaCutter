@@ -17,7 +17,7 @@ except (ImportError, ModuleNotFoundError):  # pragma: no cover
     # imports for doctest
     from sub import get_config  # type: ignore  # pragma: no cover
     from sub import helpers  # type: ignore  # pragma: no cover
-    from sub.helpers import find_version_number_in_file
+    from sub.helpers import find_version_number_in_file  # type: ignore  # pragma: no cover
     from sub import import_module  # type: ignore  # pragma: no cover
     from sub.pizzacutter_config import PizzaCutterConfigBase  # type: ignore  # pragma: no cover
 
