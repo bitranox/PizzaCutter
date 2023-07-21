@@ -261,7 +261,7 @@ class PizzaCutter(object):
 
     def resolve_str_patterns_recursive(self, pattern: str) -> str:
         if pattern in self.pattern_stack:
-            raise RecursionError(f'"{self.pattern_stack[-1]}" refers back to "{pattern}"\n\nStack:\n{pprint.pformat(self.pattern_stack)}')
+            raise RecursionError(f'"{self.pattern_stack[-1]}" refers back to "{pattern}"\n\nStack:\n{pprint.pformat(self.pattern_stack)}')  # noqa: E231
 
         self.pattern_stack.append(pattern)
 
