@@ -27,8 +27,8 @@ classifiers = [
 # see: https://setuptools.pypa.io/en/latest/userguide/dependency_management.html
 dependencies = [
     "click",
-    "cli_exit_tools",
-    "pathlib3x",
+    "cli_exit_tools @ git+https://github.com/bitranox/cli_exit_tools.git",
+    "pathlib3x @ git+https://github.com/bitranox/pathlib3x.git",
 ]
 version = "v1.1.10"
 # seems to be not allowed anymore
@@ -42,16 +42,16 @@ Changelog = "https://github.com/bitranox/PizzaCutter/blob/master/CHANGES.rst"
 
 [project.optional-dependencies]
 test = [
+    "pytest",
     "pytest-cov",
     "pytest-runner",
-    "mypy",
-    "coloredlogs",
-    "pytest",
-    "flake8",
-    "codecov",
     "readme_renderer",
     "black",
+    "codecov",
     "coverage",
+    "coloredlogs",
+    "mypy",
+    "flake8",
 ]
 
 [project.scripts]

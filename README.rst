@@ -449,8 +449,10 @@ following modules will be automatically installed :
 
     ## Project Requirements
     click
-    cli_exit_tools
-    pathlib3x
+    # in this case we really want the latest version - otherwise we can not bootstrap
+    # repositories in case cli_exit_tools or pathlib3x is broken on pypi
+    cli_exit_tools @ git+https://github.com/bitranox/cli_exit_tools.git
+    pathlib3x @ git+https://github.com/bitranox/pathlib3x.git
 
 Acknowledgements
 ----------------
