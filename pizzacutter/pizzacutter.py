@@ -37,9 +37,9 @@ class PizzaCutter(object):
                  # dry run - test only, report overwrites, files outside project directory, unset patterns, unused patterns from conf file
                  # only made the easy tests now - for full test of replacements we would need to install into a temp directory
                  dry_run: Optional[bool] = None,
-                 # allow overwrite in the target Project, can be overridden by conf_file
+                 # allow to overwrite in the target Project, can be overridden by conf_file
                  allow_overwrite: Optional[bool] = None,
-                 # allow to write files outside of the target Project Folder, can be overridden by conf_file
+                 # allow to write files outside the target Project Folder, can be overridden by conf_file
                  allow_outside_write: Optional[bool] = None,
                  quiet: Optional[bool] = None
                  ):
@@ -47,8 +47,8 @@ class PizzaCutter(object):
 
         >>> # Setup
         >>> path_test_dir = pathlib.Path(__file__).parent.parent.resolve() / 'tests'
-        >>> path_template_dir = path_test_dir / 'pizzacutter_test_template_01'
-        >>> path_conf_file = path_template_dir / 'PizzaCutterTestConfig_01.py'
+        >>> my_path_template_dir = path_test_dir / 'pizzacutter_test_template_01'
+        >>> path_conf_file = my_path_template_dir / 'PizzaCutterTestConfig_01.py'
 
         >>> # Test init, only conf file passed, quiet
         >>> pizza_cutter = PizzaCutter(path_conf_file=path_conf_file, quiet=True)
@@ -140,7 +140,7 @@ class PizzaCutter(object):
         """
         replace all the patterns in the source file
         it is already prepared for the function that You can include the content of other files into one file -
-        we dont know if we will ever finish that idea, because we simply can make that replacement in the config file
+        we don't know if we will ever finish that idea, because we simply can make that replacement in the config file
         """
 
         # this is already preparation when we are able to include the content of other files
@@ -180,9 +180,9 @@ class PizzaCutter(object):
         """
         replaces the patterns in the line
         >>> # Setup
-        >>> logger=logging.getLogger()
+        >>> my_logger=logging.getLogger()
         >>> logging.basicConfig()
-        >>> logger.level=logging.DEBUG
+        >>> my_logger.level=logging.DEBUG
 
         >>> path_test_dir = pathlib.Path(__file__).parent.parent / 'tests'
         >>> path_template_dir = path_test_dir / 'pizzacutter_test_template_01'
@@ -213,9 +213,9 @@ class PizzaCutter(object):
         those will be converted to String.
 
         >>> # Setup
-        >>> logger=logging.getLogger()
+        >>> my_logger=logging.getLogger()
         >>> logging.basicConfig()
-        >>> logger.level=logging.DEBUG
+        >>> my_logger.level=logging.DEBUG
 
         >>> path_test_dir = pathlib.Path(__file__).parent.parent / 'tests'
         >>> path_template_dir = path_test_dir / 'pizzacutter_test_template_01'
@@ -280,9 +280,9 @@ class PizzaCutter(object):
         """
 
         >>> # Setup
-        >>> logger=logging.getLogger()
+        >>> my_logger=logging.getLogger()
         >>> logging.basicConfig()
-        >>> logger.level=logging.DEBUG
+        >>> my_logger.level=logging.DEBUG
 
         >>> path_test_dir = pathlib.Path(__file__).parent.parent / 'tests'
         >>> path_template_dir = path_test_dir / 'pizzacutter_test_template_01'
@@ -297,23 +297,23 @@ class PizzaCutter(object):
 
         >>> # test line not empty, without option 'delete_line_if_empty' set :
         >>> pizza_cutter.conf.pizza_cutter_patterns['pizzacutter'] = 'doctest'
-        >>> source_line = pizza_cutter.replace_str_patterns_in_line(b'pizzacutter\\n')
-        >>> assert pizza_cutter.replace_option_patterns_in_line(source_line) == b'doctest\\n'
+        >>> my_source_line = pizza_cutter.replace_str_patterns_in_line(b'pizzacutter\\n')
+        >>> assert pizza_cutter.replace_option_patterns_in_line(my_source_line) == b'doctest\\n'
 
         >>> # test line empty, without option 'delete_line_if_empty' set :
         >>> pizza_cutter.conf.pizza_cutter_patterns['pizzacutter'] = ''
-        >>> source_line = pizza_cutter.replace_str_patterns_in_line(b'pizzacutter\\n')
-        >>> assert pizza_cutter.replace_option_patterns_in_line(source_line) == b'\\n'
+        >>> my_source_line = pizza_cutter.replace_str_patterns_in_line(b'pizzacutter\\n')
+        >>> assert pizza_cutter.replace_option_patterns_in_line(my_source_line) == b'\\n'
 
         >>> # test line not empty, with option 'delete_line_if_empty' set :
         >>> pizza_cutter.conf.pizza_cutter_patterns['pizzacutter'] = 'doctest'
-        >>> source_line = pizza_cutter.replace_str_patterns_in_line(b'pizzacutter{{TestPizzaCutter.option.delete_line_if_empty}}\\n')
-        >>> assert pizza_cutter.replace_option_patterns_in_line(source_line) == b'doctest\\n'
+        >>> my_source_line = pizza_cutter.replace_str_patterns_in_line(b'pizzacutter{{TestPizzaCutter.option.delete_line_if_empty}}\\n')
+        >>> assert pizza_cutter.replace_option_patterns_in_line(my_source_line) == b'doctest\\n'
 
         >>> # test line empty, with option 'delete_line_if_empty' set :
         >>> pizza_cutter.conf.pizza_cutter_patterns['pizzacutter'] = ''
-        >>> source_line = pizza_cutter.replace_str_patterns_in_line(b'pizzacutter{{TestPizzaCutter.option.delete_line_if_empty}}\\n')
-        >>> assert pizza_cutter.replace_option_patterns_in_line(source_line) == b''
+        >>> my_source_line = pizza_cutter.replace_str_patterns_in_line(b'pizzacutter{{TestPizzaCutter.option.delete_line_if_empty}}\\n')
+        >>> assert pizza_cutter.replace_option_patterns_in_line(my_source_line) == b''
 
 
         """
@@ -331,9 +331,9 @@ class PizzaCutter(object):
         Builds or rebuilds a project
 
         >>> # Setup
-        >>> logger=logging.getLogger()
+        >>> my_logger=logging.getLogger()
         >>> logging.basicConfig()
-        >>> logger.level=logging.DEBUG
+        >>> my_logger.level=logging.DEBUG
 
         >>> path_test_dir = pathlib.Path(__file__).parent.parent / 'tests'
         >>> path_template_dir = path_test_dir / 'pizzacutter_test_template_01'
@@ -384,7 +384,7 @@ class PizzaCutter(object):
                 path_target_object_resolved.mkdir(parents=True, exist_ok=True)
             else:
                 path_target_object_resolved.parent.mkdir(parents=True, exist_ok=True)
-                # because sometime we receive "permission denied" when overwriting the file (weired)
+                # because sometimes we receive "permission denied" when overwriting the file (weired)
                 path_target_object_resolved.unlink(missing_ok=True)
                 path_source_object.copy2(path_target_object_resolved)
 
@@ -462,9 +462,9 @@ class PizzaCutter(object):
         logs unfilled patterns in the path name of a file
 
         >>> # Setup
-        >>> logger=logging.getLogger()
+        >>> my_logger=logging.getLogger()
         >>> logging.basicConfig()
-        >>> logger.level=logging.DEBUG
+        >>> my_logger.level=logging.DEBUG
 
         >>> path_test_dir = pathlib.Path(__file__).parent.parent / 'tests'
         >>> path_template_dir = path_test_dir / 'pizzacutter_test_template_02'
@@ -509,9 +509,9 @@ class PizzaCutter(object):
         we search for bytes, because we dont know the encoding of the file
 
         >>> # Setup
-        >>> logger=logging.getLogger()
+        >>> my_logger=logging.getLogger()
         >>> logging.basicConfig()
-        >>> logger.level=logging.DEBUG
+        >>> my_logger.level=logging.DEBUG
 
         >>> path_test_dir = pathlib.Path(__file__).parent.parent / 'tests'
         >>> path_template_dir = path_test_dir / 'pizzacutter_test_template_02'
@@ -771,7 +771,7 @@ class PizzaCutter(object):
 
     def get_path_template_objects(self) -> List[pathlib.Path]:
         """
-        get all the files in the template sub directories with a valid pattern
+        get all the files in the template subdirectories with a valid pattern
 
         >>> # Setup
         >>> path_test_dir = pathlib.Path(__file__).parent.parent / 'tests'
