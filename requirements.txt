@@ -6,3 +6,4 @@ click
 # pathlib3x @ git+https://github.com/bitranox/pathlib3x.git
 cli_exit_tools
 pathlib3x
+zipp>=3.19.1 # not directly required, pinned by Snyk to avoid a vulnerability
